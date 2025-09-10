@@ -171,9 +171,20 @@ export default function Home() {
     setIsGenerating(true)
     try {
       // 查找卡片元素（不包含外层容器）
-      const cardElement = document.querySelector('.poster-card')
+      const cardElement = document.querySelector('.poster-card') as HTMLElement
       if (cardElement) {
-        const canvas = await html2canvas(cardElement as HTMLElement, {
+        // 临时移除移动端缩放效果，确保生成原始尺寸的图片
+        const originalTransform = cardElement.style.transform
+        const originalTransformOrigin = cardElement.style.transformOrigin
+        
+        // 重置transform以获得原始尺寸
+        cardElement.style.transform = 'none'
+        cardElement.style.transformOrigin = 'initial'
+        
+        // 等待样式应用
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        const canvas = await html2canvas(cardElement, {
           backgroundColor: null,
           scale: 3,
           useCORS: true,
@@ -182,6 +193,10 @@ export default function Home() {
           width: cardElement.scrollWidth,
           height: cardElement.scrollHeight
         })
+        
+        // 恢复原始的transform样式
+        cardElement.style.transform = originalTransform
+        cardElement.style.transformOrigin = originalTransformOrigin
         
         const link = document.createElement('a')
         link.download = `${content.title}-${themes[currentTheme].name}.png`
@@ -627,6 +642,8 @@ export default function Home() {
               <div className="bg-white flex items-center justify-center p-4">
                 <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
                     layoutMode === 'vertical' ? 'max-w-sm' : 'max-w-2xl'
+                  } ${
+                    layoutMode === 'horizontal' ? 'sm:scale-75 md:scale-90 lg:scale-100 origin-center' : ''
                   }`}>
                   {/* 边框背景层 */}
                   <div className="absolute inset-0 flex">
@@ -718,6 +735,8 @@ export default function Home() {
               <div id="poster-content" className="bg-white flex items-center justify-center p-4">
                 <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
                   layoutMode === 'vertical' ? 'max-w-sm' : 'max-w-2xl'
+                } ${
+                  layoutMode === 'horizontal' ? 'sm:scale-75 md:scale-90 lg:scale-100 origin-center' : ''
                 }`}>
                 {/* 边框背景层 */}
                 <div className="absolute inset-0 flex">
