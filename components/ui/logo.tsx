@@ -15,9 +15,9 @@ export const ModernLogo: React.FC<LogoProps> = ({ className = 'w-10 h-10', size 
     return (
       <div className="flex items-center gap-2 sm:gap-3">
         <LogoIcon className={className} size={size} />
-        <div className="flex flex-col justify-center min-w-0">
-          <div className="text-sm sm:text-lg font-bold text-gray-900 truncate">www.sm-card.com</div>
-          <div className="text-xs sm:text-sm text-gray-600 truncate hidden sm:block">{t.title}</div>
+        <div className="hidden sm:flex flex-col justify-center min-w-0">
+          <div className="text-lg font-bold text-gray-900 truncate">www.sm-card.com</div>
+          <div className="text-sm text-gray-600 truncate">{t.title}</div>
         </div>
       </div>
     )

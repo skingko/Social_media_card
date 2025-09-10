@@ -596,9 +596,9 @@ export default function Home() {
               {/* Logo区域 - 移动端缩小 */}
               <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                 <ModernLogo 
-                  className="w-8 h-8 sm:w-12 sm:h-12" 
+                  className="w-10 h-10 sm:w-12 sm:h-12" 
                   showDomain={true} 
-                  size={32} 
+                  size={40} 
                   language={currentLanguage} 
                 />
               </div>
