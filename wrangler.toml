@@ -5,21 +5,3 @@ compatibility_date = "2024-01-01"
 
 # Pages configuration
 pages_build_output_dir = "out"
-
-[build]
-command = "npm run build"
-cwd = "."
-
-[build.environment]
-NODE_VERSION = "20"
-NPM_VERSION = "10"
-
-# Custom domains (optional - configure in Cloudflare dashboard)
-# [env.production]
-# routes = [
-#   { pattern = "social-media-card.pages.dev", custom_domain = true }
-# ]
-
-# Environment variables (set in Cloudflare dashboard)
-# [vars]
-# NEXT_PUBLIC_APP_URL = "https://social-media-card.pages.dev"
