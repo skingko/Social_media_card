@@ -1,0 +1,24 @@
+# Cloudflare Pages Configuration for Social Media Card Generator
+
+name = "social-media-card"
+compatibility_date = "2024-01-01"
+
+# Pages configuration
+[build]
+command = "npm run build"
+cwd = "."
+publish = ".next"
+
+[build.environment]
+NODE_VERSION = "18"
+NPM_VERSION = "9"
+
+# Custom domains (optional - configure in Cloudflare dashboard)
+# [env.production]
+# routes = [
+#   { pattern = "social-media-card.pages.dev", custom_domain = true }
+# ]
+
+# Environment variables (set in Cloudflare dashboard)
+# [vars]
+# NEXT_PUBLIC_APP_URL = "https://social-media-card.pages.dev"
