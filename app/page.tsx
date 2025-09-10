@@ -590,22 +590,32 @@ export default function Home() {
       <div className="min-h-screen bg-gray-100">
         {/* 顶部导航栏 */}
         <div className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b z-50 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 py-3">
-            {/* 第一行：Logo + 标题 + GitHub + 语言切换 */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-4">
-                <ModernLogo className="w-12 h-12" showDomain={true} size={48} language={currentLanguage} />
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3">
+            {/* 移动端和桌面端不同布局 */}
+            <div className="flex items-center justify-between">
+              {/* Logo区域 - 移动端缩小 */}
+              <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                <ModernLogo 
+                  className="w-8 h-8 sm:w-12 sm:h-12" 
+                  showDomain={true} 
+                  size={32} 
+                  language={currentLanguage} 
+                />
               </div>
-              <div className="flex items-center gap-3">
-                {/* 分享按钮 */}
-                <ShareButton language={currentLanguage} />
+              
+              {/* 右侧按钮组 - 优化移动端显示 */}
+              <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+                {/* 分享按钮 - 移动端简化 */}
+                <div className="flex-shrink-0">
+                  <ShareButton language={currentLanguage} />
+                </div>
                 
-                {/* GitHub 链接 */}
+                {/* GitHub 链接 - 移动端只显示图标 */}
                 <a
                   href="https://github.com/skingko/Social_media_card"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                  className="flex items-center gap-2 px-2 sm:px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 flex-shrink-0"
                   title="GitHub"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -614,11 +624,13 @@ export default function Home() {
                   <span className="hidden sm:inline text-sm">GitHub</span>
                 </a>
                 
-                {/* 简化的语言切换器 */}
-                <LanguageSwitcher 
-                  currentLanguage={currentLanguage}
-                  onLanguageChange={handleLanguageChange}
-                />
+                {/* 语言切换器 */}
+                <div className="flex-shrink-0">
+                  <LanguageSwitcher 
+                    currentLanguage={currentLanguage}
+                    onLanguageChange={handleLanguageChange}
+                  />
+                </div>
               </div>
             </div>
           </div>

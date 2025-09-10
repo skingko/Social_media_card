@@ -77,10 +77,10 @@ export const ShareButton: React.FC<ShareProps> = ({ language }) => {
         variant="outline"
         size="sm"
         onClick={handleNativeShare}
-        className="flex items-center gap-2 hover:bg-gray-50"
+        className="flex items-center gap-1 sm:gap-2 hover:bg-gray-50 px-2 sm:px-3"
       >
-        <Share2 className="w-4 h-4" />
-        {t.ui?.share || '分享'}
+        <Share2 className="w-4 h-4 flex-shrink-0" />
+        <span className="hidden sm:inline">{t.ui?.share || '分享'}</span>
       </Button>
 
       {isOpen && (
@@ -92,7 +92,7 @@ export const ShareButton: React.FC<ShareProps> = ({ language }) => {
           />
           
           {/* 分享面板 */}
-          <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
             {/* 标题栏 */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
               <h3 className="text-sm font-semibold text-gray-900">
