@@ -1,14 +1,14 @@
-# Social Media Card Generator | 社交媒体名片生成器
+# Social Media Card Generator
 
-[English](#english) | [中文](#中文)
-
----
-
-## English
+**🌐 Language**: [English](#) | [中文](./README.zh-CN.md)
 
 A modern web application for creating beautiful social media business cards with customizable themes and instant export functionality.
 
-### ✨ Features
+![Social Media Card Generator](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+## ✨ Features
 
 - 🎨 **Multiple Themes**: 7 beautiful color themes (Blue, Green, Purple, Orange, Red, Yellow, Black)
 - 📱 **Responsive Design**: Works perfectly on both desktop and mobile devices
@@ -20,7 +20,7 @@ A modern web application for creating beautiful social media business cards with
 - ✏️ **Real-time Editing**: Live preview while editing content
 - 🌟 **Modern UI**: Clean and professional design with smooth animations
 
-### 🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 - **Framework**: Next.js 14 (App Router)
 - **Styling**: Tailwind CSS + Custom Components
@@ -29,30 +29,43 @@ A modern web application for creating beautiful social media business cards with
 - **Image Generation**: html2canvas
 - **Drag & Drop**: HTML5 Drag API
 
-### 🚀 Quick Start
+## 🚀 Quick Start
 
-#### Install Dependencies
+### Prerequisites
 
-```bash
-npm install
-```
+- Node.js 18.x or higher
+- npm or yarn package manager
 
-#### Start Development Server
+### Installation
 
-```bash
-npm run dev
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/skingko/Social_media_card.git
+   cd Social_media_card
+   ```
 
-Visit [http://localhost:3000](http://localhost:3000) to view the application.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-#### Build for Production
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser**
+   
+   Visit [http://localhost:3000](http://localhost:3000) to view the application.
+
+### Build for Production
 
 ```bash
 npm run build
 npm start
 ```
 
-### 📁 Project Structure
+## 📁 Project Structure
 
 ```
 ├── app/                    # Next.js App Router
@@ -61,27 +74,46 @@ npm start
 │   └── page.tsx           # Main page component
 ├── components/
 │   └── ui/                # UI components
-│       ├── button.tsx
-│       └── card.tsx
+│       ├── button.tsx     # Button component
+│       └── card.tsx       # Card component
 ├── lib/
 │   └── utils.ts           # Utility functions
-└── public/                # Static assets
-    ├── wechat_code.png    # Default QR code
-    └── wechat_code.jpg    # Alternative QR code
+├── public/                # Static assets
+│   ├── wechat_code.png    # Default QR code
+│   └── wechat_code.jpg    # Alternative QR code
+├── .github/
+│   └── workflows/         # GitHub Actions
+├── deploy.sh              # Deployment script
+├── wrangler.toml          # Cloudflare Pages config
+└── README.zh-CN.md        # Chinese documentation
 ```
 
-### 🎯 Usage
+## 🎯 Usage Guide
 
-1. **Edit Content**: Click "Edit Content" to modify card information
+### Creating Your Card
+
+1. **Edit Content**: Click the "Edit Content" button to modify card information
 2. **Choose Theme**: Select from 7 available color themes
 3. **Layout Toggle**: Switch between vertical and horizontal layouts
-4. **Customize Features**: Add, remove, or reorder feature items
-5. **Upload QR Code**: Drag and drop your QR code image
-6. **Export Card**: Click "Generate Image" to download your card
+4. **Customize Features**: Add, remove, or reorder feature items using drag & drop
+5. **Upload QR Code**: Drag and drop your QR code image or click to browse
+6. **Export Card**: Click "Generate Image" to download your card as PNG
 
-### 🎨 Customization
+### Theme Colors
 
-#### Adding New Themes
+| Theme | Color | Hex Code |
+|-------|-------|----------|
+| Blue | 蓝青 | `#28ca71` |
+| Green | 萌绿 | `#28ca71` |
+| Purple | 蔷薇紫 | `#d9b8fa` |
+| Orange | 橙心 | `#ff8c00` |
+| Red | 画手 | `#ff3502` |
+| Yellow | 山吹 | `#dda52d` |
+| Black | 极客黑 | `rgb(33, 33, 34)` |
+
+## 🎨 Customization
+
+### Adding New Themes
 
 Edit the `themes` object in `app/page.tsx`:
 
@@ -98,7 +130,7 @@ const themes: Record<ThemeKey, ThemeConfig> = {
 }
 ```
 
-#### Modifying Default Content
+### Modifying Default Content
 
 Update the `defaultContent` object in `app/page.tsx`:
 
@@ -115,178 +147,106 @@ const defaultContent: ContentType = {
 }
 ```
 
-### 🚀 Deployment
+## 🚀 Deployment
 
-#### Deploy to Cloudflare Pages
+### Deploy to Cloudflare Pages
 
-1. Connect your GitHub repository to Cloudflare Pages
-2. Set build command: `npm run build`
-3. Set output directory: `out`
-4. Deploy automatically on push
+#### Method 1: Cloudflare Dashboard
 
-#### Other Platforms
+1. Visit [Cloudflare Pages Dashboard](https://dash.cloudflare.com/pages)
+2. Connect your GitHub repository: `skingko/Social_media_card`
+3. Configure build settings:
+   - **Build command**: `npm run build`
+   - **Build output directory**: `.next`
+   - **Node.js version**: `18.x`
+
+#### Method 2: Local Deployment Script
+
+```bash
+# Run one-click deployment script
+./deploy.sh
+
+# Or use npm command
+npm run deploy
+```
+
+#### Method 3: Automated Deployment
+
+- GitHub Actions workflow is pre-configured
+- Automatic deployment on push to main branch
+- Required GitHub Secrets:
+  - `CLOUDFLARE_API_TOKEN`
+  - `CLOUDFLARE_ACCOUNT_ID`
+
+### Other Platforms
 
 This project can be deployed to any platform that supports Next.js:
-- Vercel
-- Netlify
-- Railway
-- AWS Amplify
 
-### 📄 License
+- **Vercel**: `vercel --prod`
+- **Netlify**: Connect GitHub repository
+- **Railway**: `railway login && railway deploy`
+- **AWS Amplify**: Connect GitHub repository
 
-MIT License - see the [LICENSE](LICENSE) file for details.
-
-### 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## 中文
-
-一个现代化的社交媒体名片生成工具，支持多种主题和即时导出功能。
-
-### ✨ 功能特性
-
-- 🎨 **多种主题**: 7种精美配色主题（蓝青、萌绿、蔷薇紫、橙心、画手、山吹、极客黑）
-- 📱 **响应式设计**: 完美适配桌面端和移动端设备
-- 🔄 **布局选择**: 支持竖版和横版两种卡片布局
-- 👁️ **可见性控制**: 灵活显示/隐藏内容区块和功能特性
-- 🖱️ **拖拽排序**: 直观的拖拽界面重新排列功能特性
-- 📤 **文件上传**: 支持拖拽上传二维码图片
-- 📸 **高质量导出**: 即时生成和下载PNG图片
-- ✏️ **实时编辑**: 编辑时实时预览效果
-- 🌟 **现代界面**: 简洁专业的设计，流畅的动画效果
-
-### 🛠️ 技术栈
-
-- **框架**: Next.js 14 (App Router)
-- **样式**: Tailwind CSS + 自定义组件
-- **语言**: TypeScript
-- **图标**: Lucide React
-- **图片生成**: html2canvas
-- **拖拽功能**: HTML5 Drag API
-
-### 🚀 快速开始
-
-#### 安装依赖
+## 🧪 Testing
 
 ```bash
-npm install
-```
+# Run linting
+npm run lint
 
-#### 启动开发服务器
-
-```bash
-npm run dev
-```
-
-访问 [http://localhost:3000](http://localhost:3000) 查看应用。
-
-#### 构建生产版本
-
-```bash
+# Build test
 npm run build
-npm start
 ```
 
-### 📁 项目结构
+## 🤝 Contributing
 
-```
-├── app/                    # Next.js App Router
-│   ├── globals.css        # 全局样式
-│   ├── layout.tsx         # 根布局
-│   └── page.tsx           # 主页面组件
-├── components/
-│   └── ui/                # UI 组件
-│       ├── button.tsx
-│       └── card.tsx
-├── lib/
-│   └── utils.ts           # 工具函数
-└── public/                # 静态资源
-    ├── wechat_code.png    # 默认二维码
-    └── wechat_code.jpg    # 备用二维码
-```
+We welcome contributions! Please follow these steps:
 
-### 🎯 使用方法
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Commit your changes**
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+4. **Push to the branch**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+5. **Open a Pull Request**
 
-1. **编辑内容**: 点击"编辑内容"修改卡片信息
-2. **选择主题**: 从7种可用配色主题中选择
-3. **切换布局**: 在竖版和横版布局间切换
-4. **自定义特性**: 添加、删除或重新排序功能项目
-5. **上传二维码**: 拖拽上传您的二维码图片
-6. **导出卡片**: 点击"生成图片"下载您的名片
+### Development Guidelines
 
-### 🎨 自定义配置
+- Follow TypeScript best practices
+- Use Tailwind CSS for styling
+- Ensure mobile responsiveness
+- Add appropriate comments for complex logic
+- Test your changes thoroughly
 
-#### 添加新主题
+## 📄 License
 
-编辑 `app/page.tsx` 中的 `themes` 对象：
-
-```typescript
-const themes: Record<ThemeKey, ThemeConfig> = {
-  newTheme: {
-    name: '主题名称',
-    primary: 'bg-[#颜色值]',
-    secondary: 'bg-color-50',
-    accent: 'bg-[#颜色值]',
-    text: 'text-[#颜色值]',
-    button: 'bg-[#颜色值] hover:bg-[#深色值]'
-  }
-}
-```
-
-#### 修改默认内容
-
-更新 `app/page.tsx` 中的 `defaultContent` 对象：
-
-```typescript
-const defaultContent: ContentType = {
-  title: '您的标题',
-  subtitle: '您的副标题', 
-  description: '您的描述',
-  features: [
-    { text: '功能特性1', visible: true },
-    { text: '功能特性2', visible: true }
-  ],
-  qrCodeUrl: '/your-qr-code.png'
-}
-```
-
-### 🚀 部署
-
-#### 部署到 Cloudflare Pages
-
-1. 将GitHub仓库连接到Cloudflare Pages
-2. 设置构建命令: `npm run build`
-3. 设置输出目录: `out`
-4. 推送代码自动部署
-
-#### 其他平台
-
-本项目可以部署到任何支持Next.js的平台：
-- Vercel
-- Netlify
-- Railway  
-- AWS Amplify
-
-### 📄 许可证
-
-MIT许可证 - 详见 [LICENSE](LICENSE) 文件。
-
-### 🤝 贡献
-
-欢迎贡献代码！请随时提交Pull Request。
-
----
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🔗 Links
 
-- **GitHub Repository**: [https://github.com/skingko/Social_media_card](https://github.com/skingko/Social_media_card)
-- **Live Demo**: [Deploy on Cloudflare Pages](https://social-media-card.pages.dev)
-- **Issues**: [Report Issues](https://github.com/skingko/Social_media_card/issues)
+- **🌐 Live Demo**: [Deploy on Cloudflare Pages](https://social-media-card.pages.dev)
+- **📖 Documentation**: [GitHub Repository](https://github.com/skingko/Social_media_card)
+- **🐛 Issues**: [Report Issues](https://github.com/skingko/Social_media_card/issues)
+- **💡 Feature Requests**: [Request Features](https://github.com/skingko/Social_media_card/issues/new)
 
-## 📞 Contact | 联系方式
+## 📞 Contact
 
 - **GitHub**: [@skingko](https://github.com/skingko)
 - **Project Link**: [Social Media Card Generator](https://github.com/skingko/Social_media_card)
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - The React framework for production
+- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
+- [Lucide React](https://lucide.dev/) - Beautiful & consistent icon toolkit
+- [html2canvas](https://html2canvas.hertzen.com/) - Screenshots with JavaScript
+
+---
+
+**⭐ If you find this project helpful, please give it a star on GitHub!**
