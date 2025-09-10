@@ -146,10 +146,11 @@ const defaultContent: ContentType = {
   description: 'AI软件定制 | 办公自动化 | 企业转型 | 付费社群',
   descriptionVisible: true,
   features: [
-    { text: 'AI软件定制服务 面议', visible: true },
+    { text: '付费社群服务 ¥9.9', visible: true },
     { text: 'AI办公自动化 ¥299起', visible: true },
-    { text: '企业AI转型咨询 ¥999起', visible: true },
-    { text: '付费社群服务 ¥9.9', visible: true }
+    { text: 'AI软件定制服务 面议', visible: false },
+    { text: '企业AI转型咨询 ¥999起', visible: false }
+    
   ],
   benefits: [
     'AI工具应用能力',
@@ -167,52 +168,170 @@ export default function Home() {
   const [content, setContent] = useState<ContentType>(defaultContent)
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('vertical')
 
+  // Responsive scale for poster preview (preserve aspect ratio)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const cardRef = useRef<HTMLDivElement | null>(null)
+  const [previewScale, setPreviewScale] = useState(1)
+  const baseWidth = layoutMode === 'vertical' ? 384 : 672
+
+  React.useEffect(() => {
+    const updateScale = () => {
+      const el = containerRef.current
+      const card = cardRef.current
+      if (!el || !card) return
+      const availableWidth = el.clientWidth
+      const scale = Math.min(availableWidth / baseWidth, 1)
+      setPreviewScale(scale)
+    }
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    return () => window.removeEventListener('resize', updateScale)
+  }, [baseWidth, isEditing])
+
+
   const generateImage = async () => {
     setIsGenerating(true)
     try {
       // 查找卡片元素（不包含外层容器）
       const cardElement = document.querySelector('.poster-card') as HTMLElement
       if (cardElement) {
-        // 保存原始样式
+        // 为远程二维码添加crossOrigin属性以支持CORS（本地上传的二维码不需要）
+        const qrImages = cardElement.querySelectorAll('img[alt="二维码"]') as NodeListOf<HTMLImageElement>
+        const originalCrossOrigins: (string | null)[] = []
+        const isRemoteQR = content.qrCodeUrl.startsWith('http') && !content.qrCodeUrl.startsWith('data:')
+        
+        if (qrImages.length > 0 && isRemoteQR) {
+          qrImages.forEach((img, index) => {
+            originalCrossOrigins[index] = img.crossOrigin
+            img.crossOrigin = 'anonymous'
+          })
+          // 等待图片重新加载
+          await new Promise(resolve => setTimeout(resolve, 200))
+        }
+
+        // 保存原始class和样式
+        const originalClassName = cardElement.className
         const originalStyles = {
           transform: cardElement.style.transform,
           transformOrigin: cardElement.style.transformOrigin,
-          maxWidth: cardElement.style.maxWidth,
           width: cardElement.style.width,
-          margin: cardElement.style.margin
+          maxWidth: cardElement.style.maxWidth
         }
         
-        // 重置为固定尺寸以确保生成原始大小的图片
+        // 重置为固定尺寸，移除所有响应式类和transform
+        cardElement.className = cardElement.className
         cardElement.style.transform = 'none'
         cardElement.style.transformOrigin = 'initial'
-        cardElement.style.maxWidth = layoutMode === 'vertical' ? '384px' : '672px' // max-w-sm = 384px, max-w-2xl = 672px
         cardElement.style.width = layoutMode === 'vertical' ? '384px' : '672px'
-        cardElement.style.margin = '0'
+        cardElement.style.maxWidth = layoutMode === 'vertical' ? '384px' : '672px'
         
+        // 临时修复文字对齐问题，覆盖Button组件的flexbox样式
+        const buttons = cardElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
+        const titles = cardElement.querySelectorAll('h1') as NodeListOf<HTMLHeadingElement>
+        const originalButtonStyles: CSSStyleDeclaration[] = []
+        const originalTitleStyles: CSSStyleDeclaration[] = []
+        
+        // 保存并修改按钮样式
+        buttons.forEach((button, index) => {
+          originalButtonStyles[index] = { ...button.style } as CSSStyleDeclaration
+          button.style.display = 'block'
+          button.style.textAlign = 'center'
+          button.style.alignItems = 'normal'
+          button.style.justifyContent = 'normal'
+          button.style.lineHeight = '1'
+        })
+        
+        // 保存并修改标题样式
+        titles.forEach((title, index) => {
+          originalTitleStyles[index] = { ...title.style } as CSSStyleDeclaration
+          title.style.textAlign = 'center'
+          title.style.lineHeight = '1.2'
+          title.style.margin = '0'
+          title.style.padding = '0'
+        })
+        
+        // 等待字体加载，避免基线偏移
+        if ((document as any).fonts?.ready) {
+          try { await (document as any).fonts.ready } catch {}
+        }
         // 等待样式应用
         await new Promise(resolve => setTimeout(resolve, 150))
         
+        // 使用元素实际尺寸，避免因transform或滚动导致为0
+        const rect = cardElement.getBoundingClientRect()
+        // 在捕获范围内再保险：确保图片为 inline
+        cardElement.querySelectorAll('img').forEach((el) => {
+          try { (el as HTMLImageElement).style.display = 'inline-block' } catch {}
+        })
         const canvas = await html2canvas(cardElement, {
           backgroundColor: null,
           scale: 3,
           useCORS: true,
-          allowTaint: false,
           logging: false,
-          width: cardElement.scrollWidth,
-          height: cardElement.scrollHeight
+          width: Math.ceil(rect.width || cardElement.scrollWidth),
+          height: Math.ceil(rect.height || cardElement.scrollHeight),
+          onclone: (doc) => {
+            try {
+              // 确保克隆文档中的二维码具备CORS属性
+              doc.querySelectorAll('img[alt="二维码"]').forEach((el) => {
+                try { (el as HTMLImageElement).crossOrigin = 'anonymous' } catch {}
+              })
+              const fix = (selector: string) => {
+                doc.querySelectorAll(selector).forEach((el) => {
+                  const node = el as HTMLElement
+                  const computed = doc.defaultView?.getComputedStyle(node)
+                  const r = node.getBoundingClientRect()
+                  const h = r.height || parseFloat(computed?.height || '0')
+                  const pt = parseFloat(computed?.paddingTop || '0')
+                  const pb = parseFloat(computed?.paddingBottom || '0')
+                  const contentH = Math.max(0, h - pt - pb)
+                  node.style.lineHeight = contentH > 0 ? `${contentH}px` : '1.1'
+                  node.style.display = 'block'
+                })
+              }
+              fix('.capture-cta')
+              fix('.capture-title')
+            } catch {}
+          }
         })
         
-        // 恢复原始样式
+        // 恢复原始class和样式
+        cardElement.className = originalClassName
         cardElement.style.transform = originalStyles.transform
         cardElement.style.transformOrigin = originalStyles.transformOrigin
-        cardElement.style.maxWidth = originalStyles.maxWidth
         cardElement.style.width = originalStyles.width
-        cardElement.style.margin = originalStyles.margin
+        cardElement.style.maxWidth = originalStyles.maxWidth
+        
+        // 恢复二维码图片的crossOrigin属性
+        if (originalCrossOrigins.length > 0 && qrImages.length > 0) {
+          qrImages.forEach((img, index) => {
+            if (originalCrossOrigins[index] === null) {
+              img.removeAttribute('crossOrigin')
+            } else {
+              img.crossOrigin = originalCrossOrigins[index]!
+            }
+          })
+        }
+        
+        // 恢复按钮和标题的原始样式
+        buttons.forEach((button, index) => {
+          if (originalButtonStyles[index]) {
+            Object.assign(button.style, originalButtonStyles[index])
+          }
+        })
+        
+        titles.forEach((title, index) => {
+          if (originalTitleStyles[index]) {
+            Object.assign(title.style, originalTitleStyles[index])
+          }
+        })
         
         const link = document.createElement('a')
         link.download = `${content.title}-${themes[currentTheme].name}.png`
         link.href = canvas.toDataURL('image/png', 1.0)
+        document.body.appendChild(link)
         link.click()
+        document.body.removeChild(link)
       } else {
         alert('未找到卡片元素，请稍后重试')
       }
@@ -650,12 +769,12 @@ export default function Home() {
               {/* 右侧预览面板 */}
               <div className="w-full lg:w-1/2 bg-gray-50 rounded-lg overflow-y-auto flex items-center justify-center p-2 sm:p-4 lg:p-6">
               {/* 海报预览 */}
-              <div className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-hidden">
-                <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
-                    layoutMode === 'vertical' 
-                      ? 'max-w-sm mx-auto' 
-                      : 'max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto'
-                  }`}>
+              <div ref={containerRef} className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-visible">
+                <div
+                  ref={cardRef}
+                  className={`poster-card shadow-xl overflow-hidden relative mx-auto`}
+                  style={{ width: `${baseWidth}px`, transform: `scale(${previewScale})`, transformOrigin: 'top left' }}
+                >
                   {/* 边框背景层 */}
                   <div className="absolute inset-0 flex">
                     <div className={`w-1/3 ${theme.primary} relative`}>
@@ -677,7 +796,7 @@ export default function Home() {
                         <div className={`${theme.primary} text-white mb-3 w-full ${
                           layoutMode === 'vertical' ? 'py-2 px-3' : 'py-3 px-4'
                         }`}>
-                          <h1 className={`font-bold ${
+                          <h1 className={`font-bold leading-none capture-title ${
                             layoutMode === 'vertical' ? 'text-lg' : 'text-xl'
                           }`}>{content.title}</h1>
                         </div>
@@ -724,15 +843,22 @@ export default function Home() {
                         <div className={`bg-white border border-gray-400 flex items-center justify-center overflow-hidden ${
                           layoutMode === 'vertical' ? 'w-20 h-20' : 'w-24 h-24'
                         }`}>
-                          <img src={content.qrCodeUrl} alt="二维码" className="w-full h-full object-cover" />
+                          <img 
+                            src={content.qrCodeUrl}
+                            alt="二维码"
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         
-                        {/* 点击了解按钮 */}
-                        <Button className={`w-full text-white font-medium ${theme.button} ${
-                          layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
-                        }`}>
+                        {/* 点击了解按钮（使用div避免flex导致的基线偏移） */}
+                        <div
+                          role="button"
+                          className={`w-full text-white font-medium text-center rounded-md capture-cta ${theme.button} ${
+                            layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
+                          }`}
+                        >
                           点击了解
-                        </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -743,12 +869,12 @@ export default function Home() {
             ) : (
             /* 非编辑模式 - 居中显示 */
             <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] p-2 sm:p-4">
-              <div id="poster-content" className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-hidden">
-                <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
-                  layoutMode === 'vertical' 
-                    ? 'max-w-sm mx-auto' 
-                    : 'max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto'
-                }`}>
+              <div id="poster-content" ref={containerRef} className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-visible">
+                <div
+                  ref={cardRef}
+                  className={`poster-card shadow-xl overflow-hidden relative mx-auto`}
+                  style={{ width: `${baseWidth}px`, transform: `scale(${previewScale})`, transformOrigin: 'top left' }}
+                >
                 {/* 边框背景层 */}
                 <div className="absolute inset-0 flex">
                   <div className={`w-1/3 ${theme.primary} relative`}>
@@ -770,7 +896,7 @@ export default function Home() {
                       <div className={`${theme.primary} text-white mb-3 w-full ${
                         layoutMode === 'vertical' ? 'py-2 px-3' : 'py-3 px-4'
                       }`}>
-                        <h1 className={`font-bold ${
+                        <h1 className={`font-bold leading-none capture-title ${
                           layoutMode === 'vertical' ? 'text-lg' : 'text-xl'
                         }`}>{content.title}</h1>
                       </div>
@@ -817,15 +943,22 @@ export default function Home() {
                       <div className={`bg-white border border-gray-400 flex items-center justify-center overflow-hidden ${
                         layoutMode === 'vertical' ? 'w-20 h-20' : 'w-24 h-24'
                       }`}>
-                        <img src={content.qrCodeUrl} alt="二维码" className="w-full h-full object-cover" />
+                        <img 
+                          src={content.qrCodeUrl}
+                          alt="二维码"
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       
-                      {/* 点击了解按钮 */}
-                      <Button className={`w-full text-white font-medium ${theme.button} ${
-                        layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
-                      }`}>
+                      {/* 点击了解按钮（使用div避免flex导致的基线偏移） */}
+                      <div
+                        role="button"
+                        className={`w-full text-white font-medium text-center rounded-md capture-cta ${theme.button} ${
+                          layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
+                        }`}
+                      >
                         点击了解
-                      </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
