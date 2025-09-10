@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -95,7 +96,17 @@ export default function RootLayout({
         <meta name="theme-color" content="#6366f1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        {/* 网站跟踪分析脚本 */}
+        <Script
+          src="https://logs.taskin.chat/tracker.js"
+          data-website-id="cmfelx33z0001na7ztaix6229"
+          strategy="afterInteractive"
+          async
+          defer
+        />
+      </body>
     </html>
   )
 }
