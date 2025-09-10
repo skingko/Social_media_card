@@ -151,16 +151,65 @@ const defaultContent: ContentType = {
 
 ### Deploy to Cloudflare Pages
 
-#### Method 1: Cloudflare Dashboard
+#### Method 1: Cloudflare Dashboard (Manual)
 
 1. Visit [Cloudflare Pages Dashboard](https://dash.cloudflare.com/pages)
 2. Connect your GitHub repository: `skingko/Social_media_card`
 3. Configure build settings:
    - **Build command**: `npm run build`
-   - **Build output directory**: `.next`
-   - **Node.js version**: `18.x`
+   - **Build output directory**: `out`
+   - **Node.js version**: `20.x`
 
-#### Method 2: Local Deployment Script
+#### Method 2: GitHub Actions (Automated) ⭐ Recommended
+
+**Prerequisites: Set up Cloudflare API credentials**
+
+##### 🔑 Generate Cloudflare API Token & Account ID
+
+1. **Get API Token**:
+   - 登录 [Cloudflare 仪表盘](https://dash.cloudflare.com)
+   - 前往 [API Tokens 页面](https://dash.cloudflare.com/profile/api-tokens)
+   - 点击 **"Create Token"**
+   - 选择 **"Custom Token"**
+   - 配置权限：
+     - **Permissions**: `Cloudflare Pages — Edit`
+     - **Account Resources**: `Include — All accounts` (或选择特定账户)
+   - 点击 **"Continue to Summary"** → **"Create Token"**
+   - 复制生成的令牌 (保存好，只显示一次)
+
+2. **Get Account ID**:
+   - 在 [Cloudflare 仪表盘](https://dash.cloudflare.com) 主页
+   - 右侧 **"Overview"** 区域查看 **Account ID**
+   - 或在 Pages 项目的 URL 中找到 (格式: `https://dash.cloudflare.com/{ACCOUNT_ID}/pages`)
+
+3. **Configure GitHub Secrets**:
+   - 前往你的 GitHub 仓库
+   - 点击 **Settings** → **Secrets and variables** → **Actions**
+   - 点击 **"New repository secret"** 添加以下两个密钥:
+     - **Name**: `CLOUDFLARE_API_TOKEN` | **Value**: 你的 API Token
+     - **Name**: `CLOUDFLARE_ACCOUNT_ID` | **Value**: 你的 Account ID
+
+##### 🚀 Automatic Deployment
+
+配置完成后，每次推送到 `main` 分支都会自动部署到 Cloudflare Pages：
+
+```yaml
+# .github/workflows/deploy.yml (已配置)
+- name: Deploy to Cloudflare Pages with Wrangler
+  run: wrangler pages deploy out --project-name=social-media-card
+  env:
+    CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+```
+
+##### 📋 Manual Trigger
+
+你也可以手动触发部署：
+1. 前往 GitHub 仓库的 **Actions** 标签页
+2. 选择 **"Deploy to Cloudflare Pages"** workflow
+3. 点击 **"Run workflow"** → **"Run workflow"**
+
+#### Method 3: Local Deployment Script
 
 ```bash
 # Run one-click deployment script
@@ -170,7 +219,7 @@ const defaultContent: ContentType = {
 npm run deploy
 ```
 
-#### Method 3: Automated Deployment
+#### Method 4: Automated Deployment
 
 - GitHub Actions workflow is pre-configured
 - Automatic deployment on push to main branch

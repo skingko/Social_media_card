@@ -5,7 +5,8 @@ import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Download, Bot, Edit3, Palette, CheckCircle, Star, Users, Zap, GripVertical, Upload, X, Eye, EyeOff, RotateCw } from 'lucide-react'
 import html2canvas from 'html2canvas'
-import defaultQRCode from '/public/wechat_code.png'
+// 使用字符串路径而不是ES6导入，因为public目录的文件在运行时可用
+const defaultQRCodePath = '/wechat_code.png'
 
 // 类型定义
 interface ThemeConfig {
@@ -156,7 +157,7 @@ const defaultContent: ContentType = {
     '持续更新的知识库',
     '真诚有观点的老友交流'
   ],
-  qrCodeUrl: defaultQRCode.src
+  qrCodeUrl: defaultQRCodePath
 }
 
 export default function Home() {
@@ -355,7 +356,7 @@ export default function Home() {
   }
 
   const clearQRCode = () => {
-    updateContent('qrCodeUrl', defaultQRCode.src)
+    updateContent('qrCodeUrl', defaultQRCodePath)
   }
 
   const theme = themes[currentTheme]
@@ -593,7 +594,7 @@ export default function Home() {
                     />
                     
                     {/* 图片预览和操作 */}
-                    {content.qrCodeUrl && content.qrCodeUrl !== defaultQRCode.src && (
+                    {content.qrCodeUrl && content.qrCodeUrl !== defaultQRCodePath && (
                       <div className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
                         <img 
                           src={content.qrCodeUrl} 
