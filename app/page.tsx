@@ -5,8 +5,8 @@ import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Download, Bot, Edit3, Palette, CheckCircle, Star, Users, Zap, GripVertical, Upload, X, Eye, EyeOff, RotateCw } from 'lucide-react'
 import html2canvas from 'html2canvas'
-// 使用字符串路径而不是ES6导入，因为public目录的文件在运行时可用
-const defaultQRCodePath = '/wechat_code.png'
+// 使用阿里云OSS地址作为默认二维码，避免静态资源路径问题
+const defaultQRCodePath = 'https://test-models.oss-cn-shanghai.aliyuncs.com/pics_go/202509102242338.png'
 
 // 类型定义
 interface ThemeConfig {
