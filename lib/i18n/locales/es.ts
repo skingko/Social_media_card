@@ -66,7 +66,10 @@ export const es: Translation = {
     shareToSocialMedia: 'Compartir en Redes Sociales',
     copied: 'Copiado',
     copyLink: 'Copiar Enlace',
-    email: 'Correo'
+    email: 'Correo',
+    cardNotFound: 'No se encontró el elemento de la tarjeta, inténtelo de nuevo más tarde',
+    generateImageFailed: 'Error al generar la imagen, inténtelo de nuevo',
+    selectValidImageFile: 'Por favor seleccione un archivo de imagen válido'
   },
   defaultContent: {
     title: 'Reseña de Software AI',

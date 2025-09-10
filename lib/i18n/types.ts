@@ -66,6 +66,9 @@ export interface Translation {
     copied: string
     copyLink: string
     email: string
+    cardNotFound: string
+    generateImageFailed: string
+    selectValidImageFile: string
   }
   defaultContent: {
     title: string

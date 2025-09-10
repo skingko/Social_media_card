@@ -66,7 +66,10 @@ export const ko: Translation = {
     shareToSocialMedia: '소셜미디어에 공유',
     copied: '복사됨',
     copyLink: '링크 복사',
-    email: '이메일'
+    email: '이메일',
+    cardNotFound: '카드 요소를 찾을 수 없습니다. 나중에 다시 시도해 주세요',
+    generateImageFailed: '이미지 생성에 실패했습니다. 다시 시도해 주세요',
+    selectValidImageFile: '유효한 이미지 파일을 선택해 주세요'
   },
   defaultContent: {
     title: 'AI 소프트웨어 리뷰',

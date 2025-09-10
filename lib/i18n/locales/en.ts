@@ -66,7 +66,10 @@ export const en: Translation = {
     shareToSocialMedia: 'Share to Social Media',
     copied: 'Copied',
     copyLink: 'Copy Link',
-    email: 'Email'
+    email: 'Email',
+    cardNotFound: 'Card element not found, please try again later',
+    generateImageFailed: 'Failed to generate image, please try again',
+    selectValidImageFile: 'Please select a valid image file'
   },
   defaultContent: {
     title: 'AI Software Review',

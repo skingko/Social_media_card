@@ -66,7 +66,10 @@ export const zhCN: Translation = {
     shareToSocialMedia: '分享到社交媒体',
     copied: '已复制',
     copyLink: '复制链接',
-    email: '邮件'
+    email: '邮件',
+    cardNotFound: '未找到卡片元素，请稍后重试',
+    generateImageFailed: '生成图片失败，请重试',
+    selectValidImageFile: '请选择有效的图片文件'
   },
   defaultContent: {
     title: 'AI软件测评说',

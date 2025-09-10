@@ -66,7 +66,10 @@ export const ja: Translation = {
     shareToSocialMedia: 'ソーシャルメディアにシェア',
     copied: 'コピー済み',
     copyLink: 'リンクをコピー',
-    email: 'メール'
+    email: 'メール',
+    cardNotFound: 'カード要素が見つかりません。後でもう一度お試しください',
+    generateImageFailed: '画像の生成に失敗しました。もう一度お試しください',
+    selectValidImageFile: '有効な画像ファイルを選択してください'
   },
   defaultContent: {
     title: 'AIソフトウェアレビュー',

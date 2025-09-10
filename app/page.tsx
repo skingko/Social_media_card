@@ -9,6 +9,7 @@ import { ModernLogo } from '../components/ui/logo'
 import { LanguageSwitcher } from '../components/ui/language-switcher'
 import { Footer } from '../components/ui/footer'
 import { ShareButton } from '../components/ui/share'
+import { useToast, ToastContainer } from '../components/ui/toast'
 import { 
   useTranslation, 
   LanguageCode, 
@@ -104,6 +105,7 @@ export default function Home() {
   const [isPreviewExpanded, setIsPreviewExpanded] = useState(false)
   const [currentTheme, setCurrentTheme] = useState<ThemeKey>('blue')
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('zh-CN')
+  const { toasts, showError, showSuccess, showWarning, showInfo, closeToast } = useToast()
   // 使用 ref 来避免在每次渲染时重新创建默认内容
   const getDefaultContent = (): ContentType => {
     const t = useTranslation(currentLanguage)
@@ -235,7 +237,7 @@ export default function Home() {
   const generateImage = async () => {
     // 如果在编辑模式且预览未展开，提示用户先完成编辑
     if (isEditing && !isPreviewExpanded) {
-      alert(t.ui.completeEditFirst)
+      showWarning(t.ui.completeEditFirst)
       return
     }
     
@@ -409,11 +411,11 @@ export default function Home() {
         link.click()
         document.body.removeChild(link)
       } else {
-        alert('未找到卡片元素，请稍后重试')
+        showError(t.ui.cardNotFound || '未找到卡片元素，请稍后重试')
       }
     } catch (error) {
       console.error('生成图片失败:', error)
-      alert('生成图片失败，请重试')
+      showError(t.ui.generateImageFailed || '生成图片失败，请重试')
     } finally {
       setIsGenerating(false)
     }
@@ -546,7 +548,7 @@ export default function Home() {
       
       reader.readAsDataURL(file)
     } else {
-      alert('请选择有效的图片文件')
+      showError(t.ui.selectValidImageFile || '请选择有效的图片文件')
     }
   }
 
@@ -1142,6 +1144,9 @@ export default function Home() {
         {/* 底部信息 */}
         <Footer language={currentLanguage} />
       </div>
+
+      {/* Toast 通知容器 */}
+      <ToastContainer toasts={toasts} onClose={closeToast} />
     </>
   )
 }
