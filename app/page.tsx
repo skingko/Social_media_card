@@ -637,13 +637,13 @@ export default function Home() {
             </div>
             
               {/* 右侧预览面板 */}
-              <div className="w-full lg:w-1/2 bg-gray-50 rounded-lg overflow-y-auto flex items-center justify-center p-6">
+              <div className="w-full lg:w-1/2 bg-gray-50 rounded-lg overflow-y-auto flex items-center justify-center p-2 sm:p-4 lg:p-6">
               {/* 海报预览 */}
-              <div className="bg-white flex items-center justify-center p-4">
+              <div className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-hidden">
                 <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
                     layoutMode === 'vertical' ? 'max-w-sm' : 'max-w-2xl'
                   } ${
-                    layoutMode === 'horizontal' ? 'sm:scale-75 md:scale-90 lg:scale-100 origin-center' : ''
+                    layoutMode === 'horizontal' ? 'scale-50 sm:scale-60 md:scale-75 lg:scale-90 xl:scale-100 origin-center' : ''
                   }`}>
                   {/* 边框背景层 */}
                   <div className="absolute inset-0 flex">
@@ -731,12 +731,12 @@ export default function Home() {
           </div>
             ) : (
             /* 非编辑模式 - 居中显示 */
-            <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] p-4">
-              <div id="poster-content" className="bg-white flex items-center justify-center p-4">
+            <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] p-2 sm:p-4">
+              <div id="poster-content" className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-hidden">
                 <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
                   layoutMode === 'vertical' ? 'max-w-sm' : 'max-w-2xl'
                 } ${
-                  layoutMode === 'horizontal' ? 'sm:scale-75 md:scale-90 lg:scale-100 origin-center' : ''
+                  layoutMode === 'horizontal' ? 'scale-50 sm:scale-60 md:scale-75 lg:scale-90 xl:scale-100 origin-center' : ''
                 }`}>
                 {/* 边框背景层 */}
                 <div className="absolute inset-0 flex">
