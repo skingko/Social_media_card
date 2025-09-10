@@ -5,8 +5,6 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  // Ensure proper asset handling for static export
-  distDir: 'out',
 }
 
 module.exports = nextConfig
