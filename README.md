@@ -1,6 +1,8 @@
 # Social Media Card Generator
 
-**🌐 Language**: [English](#) | [中文](./README.zh-CN.md)
+**🌐 Website**: [www.sm-card.com](https://www.sm-card.com)
+
+**🌐 Languages**: [English](#) | [中文](./README.zh-CN.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Español](./README.es.md)
 
 A modern web application for creating beautiful social media business cards with customizable themes and instant export functionality.
 
@@ -287,7 +289,24 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact
 
 - **GitHub**: [@skingko](https://github.com/skingko)
+- **WeChat**: skingko
 - **Project Link**: [Social Media Card Generator](https://github.com/skingko/Social_media_card)
+
+## 📱 Follow Us
+
+<div align="center">
+
+### WeChat Official Account
+<img src="https://test-models.oss-cn-shanghai.aliyuncs.com/pics_go/202509110044079.jpg" width="200" alt="WeChat Official Account QR Code">
+
+*Scan to follow our WeChat Official Account for updates*
+
+### Add Author WeChat
+<img src="https://test-models.oss-cn-shanghai.aliyuncs.com/pics_go/202509102242338.png" width="200" alt="Author WeChat QR Code">
+
+*Scan to add author WeChat: skingko*
+
+</div>
 
 ## 🙏 Acknowledgments
 

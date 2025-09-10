@@ -1,10 +1,22 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Download, Bot, Edit3, Palette, CheckCircle, Star, Users, Zap, GripVertical, Upload, X, Eye, EyeOff, RotateCw } from 'lucide-react'
 import html2canvas from 'html2canvas'
+import { ModernLogo } from '../components/ui/logo'
+import { LanguageSwitcher } from '../components/ui/language-switcher'
+import { Footer } from '../components/ui/footer'
+import { ShareButton } from '../components/ui/share'
+import { 
+  useTranslation, 
+  LanguageCode, 
+  loadLanguagePreference, 
+  saveLanguagePreference,
+  detectBrowserLanguage
+} from '../lib/i18n/index'
+
 // 使用阿里云OSS地址作为默认二维码，避免静态资源路径问题
 const defaultQRCodePath = 'https://test-models.oss-cn-shanghai.aliyuncs.com/pics_go/202509102242338.png'
 
@@ -34,7 +46,6 @@ interface ContentType {
 }
 
 type LayoutMode = 'vertical' | 'horizontal'
-
 type ThemeKey = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'yellow' | 'black'
 
 // 新增主题类型
@@ -58,114 +69,66 @@ const GridBackground: React.FC<GridBackgroundProps> = ({ className = '' }) => {
   )
 }
 
-// 样式主题配置
-const themes: Record<ThemeKey, ThemeConfig> = {
-  blue: {
-    name: '蓝青',
-    primary: 'bg-[#28ca71]',
-    secondary: 'bg-blue-50',
-    accent: 'bg-[#28ca71]',
-    text: 'text-[#28ca71]',
-    button: 'bg-[#28ca71] hover:bg-[#20b864]'
-  },
-  green: {
-    name: '萌绿',
-    primary: 'bg-[#28ca71]',
-    secondary: 'bg-green-50',
-    accent: 'bg-[#28ca71]',
-    text: 'text-[#28ca71]',
-    button: 'bg-[#28ca71] hover:bg-[#20b864]'
-  },
-  purple: {
-    name: '蔷薇紫',
-    primary: 'bg-[#d9b8fa]',
-    secondary: 'bg-purple-50',
-    accent: 'bg-[#d9b8fa]',
-    text: 'text-[#d9b8fa]',
-    button: 'bg-[#d9b8fa] hover:bg-[#d1a8f8]'
-  },
-  orange: {
-    name: '橙心',
-    primary: 'bg-[#ff8c00]',
-    secondary: 'bg-orange-50',
-    accent: 'bg-[#ff8c00]',
-    text: 'text-[#ff8c00]',
-    button: 'bg-[#ff8c00] hover:bg-[#e67e00]'
-  },
-  red: {
-    name: '画手',
-    primary: 'bg-[#ff3502]',
-    secondary: 'bg-red-50',
-    accent: 'bg-[#ff3502]',
-    text: 'text-[#ff3502]',
-    button: 'bg-[#ff3502] hover:bg-[#e52e02]'
-  },
-  yellow: {
-    name: '山吹',
-    primary: 'bg-[#dda52d]',
-    secondary: 'bg-yellow-50',
-    accent: 'bg-[#dda52d]',
-    text: 'text-[#dda52d]',
-    button: 'bg-[#dda52d] hover:bg-[#c89426]'
-  },
-  black: {
-    name: '极客黑',
-    primary: 'bg-[rgb(33,33,34)]',
-    secondary: 'bg-gray-50',
-    accent: 'bg-[rgb(33,33,34)]',
-    text: 'text-[rgb(33,33,34)]',
-    button: 'bg-[rgb(33,33,34)] hover:bg-[rgb(23,23,24)]'
-  }
-}
-
-// SVG Logo 组件
-const SocialMediaLogo: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
-  <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* 外圆背景 */}
-    <circle cx="50" cy="50" r="45" fill="url(#gradient)" stroke="#fff" strokeWidth="2"/>
-    {/* 社交图标 */}
-    <rect x="25" y="35" width="15" height="10" rx="2" fill="#fff" opacity="0.9"/>
-    <rect x="45" y="35" width="15" height="10" rx="2" fill="#fff" opacity="0.7"/>
-    <rect x="65" y="35" width="10" height="10" rx="2" fill="#fff" opacity="0.5"/>
-    {/* 名片边框 */}
-    <rect x="20" y="30" width="60" height="40" rx="4" fill="none" stroke="#fff" strokeWidth="2" opacity="0.6"/>
-    {/* 渐变定义 */}
-    <defs>
-      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#667eea" />
-        <stop offset="100%" stopColor="#764ba2" />
-      </linearGradient>
-    </defs>
-  </svg>
-)
-
-// 默认内容配置
-const defaultContent: ContentType = {
-  title: 'AI软件测评说',
-  subtitle: '专业AI软件定制 | 智能化转型咨询',
-  description: 'AI软件定制 | 办公自动化 | 企业转型 | 付费社群',
-  descriptionVisible: true,
-  features: [
-    { text: '付费社群服务 ¥9.9', visible: true },
-    { text: 'AI办公自动化 ¥299起', visible: true },
-    { text: 'AI软件定制服务 面议', visible: false },
-    { text: '企业AI转型咨询 ¥999起', visible: false }
+// 动态元数据组件
+const DynamicHead: React.FC<{ language: LanguageCode }> = ({ language }) => {
+  const t = useTranslation(language)
+  
+  useEffect(() => {
+    // 动态更新页面标题
+    document.title = t.meta.title
     
-  ],
-  benefits: [
-    'AI工具应用能力',
-    '智能体构建技能',
-    '持续更新的知识库',
-    '真诚有观点的老友交流'
-  ],
-  qrCodeUrl: defaultQRCodePath
+    // 更新描述
+    const description = document.querySelector('meta[name="description"]')
+    if (description) {
+      description.setAttribute('content', t.meta.description)
+    }
+    
+    // 更新关键词
+    const keywords = document.querySelector('meta[name="keywords"]')
+    if (keywords) {
+      keywords.setAttribute('content', t.meta.keywords)
+    }
+    
+    // 更新语言属性
+    document.documentElement.lang = language === 'zh-CN' ? 'zh-CN' : 
+                                   language === 'zh-TW' ? 'zh-TW' : 
+                                   language.split('-')[0]
+  }, [language, t])
+  
+  return null
 }
 
 export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false)
   const [currentTheme, setCurrentTheme] = useState<ThemeKey>('blue')
-  const [content, setContent] = useState<ContentType>(defaultContent)
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('zh-CN')
+  // 使用 ref 来避免在每次渲染时重新创建默认内容
+  const getDefaultContent = (): ContentType => {
+    const t = useTranslation(currentLanguage)
+    return {
+      title: t.defaultContent.title,
+      subtitle: t.defaultContent.subtitle,
+      description: t.defaultContent.description,
+      descriptionVisible: true,
+      features: [
+        { text: t.defaultContent.feature1, visible: true },
+        { text: t.defaultContent.feature2, visible: true },
+        { text: t.defaultContent.feature3, visible: false },
+        { text: t.defaultContent.feature4, visible: false }
+      ],
+      benefits: [
+        'AI工具应用能力',
+        '智能体构建技能',
+        '持续更新的知识库',
+        '真诚有观点的老友交流'
+      ],
+      qrCodeUrl: defaultQRCodePath
+    }
+  }
+
+  const [content, setContent] = useState<ContentType>(getDefaultContent())
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('vertical')
 
   // Responsive scale for poster preview (preserve aspect ratio)
@@ -173,6 +136,75 @@ export default function Home() {
   const cardRef = useRef<HTMLDivElement | null>(null)
   const [previewScale, setPreviewScale] = useState(1)
   const baseWidth = layoutMode === 'vertical' ? 384 : 672
+
+  // 初始化语言设置
+  useEffect(() => {
+    const preferredLanguage = loadLanguagePreference()
+    setCurrentLanguage(preferredLanguage)
+  }, [])
+
+  // 获取当前语言的翻译
+  const t = useTranslation(currentLanguage)
+
+  // 样式主题配置（使用翻译后的名称）
+  const themes: Record<ThemeKey, ThemeConfig> = {
+    blue: {
+      name: t.themes.blue,
+      primary: 'bg-[#28ca71]',
+      secondary: 'bg-blue-50',
+      accent: 'bg-[#28ca71]',
+      text: 'text-[#28ca71]',
+      button: 'bg-[#28ca71] hover:bg-[#20b864]'
+    },
+    green: {
+      name: t.themes.green,
+      primary: 'bg-[#28ca71]',
+      secondary: 'bg-green-50',
+      accent: 'bg-[#28ca71]',
+      text: 'text-[#28ca71]',
+      button: 'bg-[#28ca71] hover:bg-[#20b864]'
+    },
+    purple: {
+      name: t.themes.purple,
+      primary: 'bg-[#d9b8fa]',
+      secondary: 'bg-purple-50',
+      accent: 'bg-[#d9b8fa]',
+      text: 'text-[#d9b8fa]',
+      button: 'bg-[#d9b8fa] hover:bg-[#d1a8f8]'
+    },
+    orange: {
+      name: t.themes.orange,
+      primary: 'bg-[#ff8c00]',
+      secondary: 'bg-orange-50',
+      accent: 'bg-[#ff8c00]',
+      text: 'text-[#ff8c00]',
+      button: 'bg-[#ff8c00] hover:bg-[#e67e00]'
+    },
+    red: {
+      name: t.themes.red,
+      primary: 'bg-[#ff3502]',
+      secondary: 'bg-red-50',
+      accent: 'bg-[#ff3502]',
+      text: 'text-[#ff3502]',
+      button: 'bg-[#ff3502] hover:bg-[#e52e02]'
+    },
+    yellow: {
+      name: t.themes.yellow,
+      primary: 'bg-[#dda52d]',
+      secondary: 'bg-yellow-50',
+      accent: 'bg-[#dda52d]',
+      text: 'text-[#dda52d]',
+      button: 'bg-[#dda52d] hover:bg-[#c89426]'
+    },
+    black: {
+      name: t.themes.black,
+      primary: 'bg-[rgb(33,33,34)]',
+      secondary: 'bg-gray-50',
+      accent: 'bg-[rgb(33,33,34)]',
+      text: 'text-[rgb(33,33,34)]',
+      button: 'bg-[rgb(33,33,34)] hover:bg-[rgb(23,23,24)]'
+    }
+  }
 
   React.useEffect(() => {
     const updateScale = () => {
@@ -188,8 +220,25 @@ export default function Home() {
     return () => window.removeEventListener('resize', updateScale)
   }, [baseWidth, isEditing])
 
+  // 语言切换处理
+  const handleLanguageChange = (language: LanguageCode) => {
+    setCurrentLanguage(language)
+    saveLanguagePreference(language)
+  }
+
+  // 当语言切换时，更新默认内容
+  useEffect(() => {
+    const newDefaultContent = getDefaultContent()
+    setContent(newDefaultContent)
+  }, [currentLanguage])
 
   const generateImage = async () => {
+    // 如果在编辑模式且预览未展开，提示用户先完成编辑
+    if (isEditing && !isPreviewExpanded) {
+      alert(t.ui.completeEditFirst)
+      return
+    }
+    
     setIsGenerating(true)
     try {
       // 查找卡片元素（不包含外层容器）
@@ -219,11 +268,13 @@ export default function Home() {
         }
         
         // 重置为固定尺寸，移除所有响应式类和transform
-        cardElement.className = cardElement.className
+        cardElement.className = 'poster-card shadow-xl overflow-hidden relative mx-auto'
         cardElement.style.transform = 'none'
         cardElement.style.transformOrigin = 'initial'
         cardElement.style.width = layoutMode === 'vertical' ? '384px' : '672px'
         cardElement.style.maxWidth = layoutMode === 'vertical' ? '384px' : '672px'
+        cardElement.style.minWidth = layoutMode === 'vertical' ? '384px' : '672px'
+        cardElement.style.height = 'auto'
         
         // 临时修复文字对齐问题，覆盖Button组件的flexbox样式
         const buttons = cardElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
@@ -265,33 +316,58 @@ export default function Home() {
         })
         const canvas = await html2canvas(cardElement, {
           backgroundColor: null,
-          scale: 3,
+          scale: 2,
           useCORS: true,
           logging: false,
-          width: Math.ceil(rect.width || cardElement.scrollWidth),
-          height: Math.ceil(rect.height || cardElement.scrollHeight),
+          width: layoutMode === 'vertical' ? 384 : 672,
+          allowTaint: true,
+          foreignObjectRendering: false,
           onclone: (doc) => {
             try {
               // 确保克隆文档中的二维码具备CORS属性
               doc.querySelectorAll('img[alt="二维码"]').forEach((el) => {
-                try { (el as HTMLImageElement).crossOrigin = 'anonymous' } catch {}
+                try { 
+                  const img = el as HTMLImageElement
+                  img.crossOrigin = 'anonymous'
+                  img.style.display = 'block'
+                  img.style.width = 'auto'
+                  img.style.height = 'auto'
+                } catch {}
               })
-              const fix = (selector: string) => {
-                doc.querySelectorAll(selector).forEach((el) => {
-                  const node = el as HTMLElement
-                  const computed = doc.defaultView?.getComputedStyle(node)
-                  const r = node.getBoundingClientRect()
-                  const h = r.height || parseFloat(computed?.height || '0')
-                  const pt = parseFloat(computed?.paddingTop || '0')
-                  const pb = parseFloat(computed?.paddingBottom || '0')
-                  const contentH = Math.max(0, h - pt - pb)
-                  node.style.lineHeight = contentH > 0 ? `${contentH}px` : '1.1'
-                  node.style.display = 'block'
-                })
-              }
-              fix('.capture-cta')
-              fix('.capture-title')
-            } catch {}
+              
+              // 修复按钮和标题的样式
+              doc.querySelectorAll('.capture-cta').forEach((el) => {
+                const node = el as HTMLElement
+                node.style.display = 'flex'
+                node.style.alignItems = 'center'
+                node.style.justifyContent = 'center'
+                node.style.textAlign = 'center'
+                node.style.lineHeight = '1.2'
+                node.style.fontWeight = '500'
+              })
+              
+              doc.querySelectorAll('.capture-title').forEach((el) => {
+                const node = el as HTMLElement
+                node.style.display = 'block'
+                node.style.textAlign = 'center'
+                node.style.lineHeight = '1.2'
+                node.style.fontWeight = 'bold'
+                node.style.margin = '0'
+                node.style.padding = '0'
+              })
+              
+              // 确保所有文本元素正确对齐
+              doc.querySelectorAll('h1, h2, h3, p, div').forEach((el) => {
+                const node = el as HTMLElement
+                if (node.classList.contains('capture-title') || node.classList.contains('capture-cta')) {
+                  return // 已经处理过
+                }
+                node.style.lineHeight = '1.4'
+              })
+              
+            } catch (error) {
+              console.error('Clone processing error:', error)
+            }
           }
         })
         
@@ -507,467 +583,565 @@ export default function Home() {
   const theme = themes[currentTheme]
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* 顶部导航栏 */}
-      <div className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          {/* 第一行：Logo + 主要操作按钮 + 布局切换 */}
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex items-center gap-2">
-              <SocialMediaLogo className="w-8 h-8" />
-              <div className="hidden sm:block">
-                <h1 className="text-lg font-bold text-gray-900">社交媒体名片生成</h1>
+    <>
+      <DynamicHead language={currentLanguage} />
+      <div className="min-h-screen bg-gray-100">
+        {/* 顶部导航栏 */}
+        <div className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b z-50 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 py-3">
+            {/* 第一行：Logo + 标题 + GitHub + 语言切换 */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-4">
+                <ModernLogo className="w-12 h-12" showDomain={true} size={48} language={currentLanguage} />
+              </div>
+              <div className="flex items-center gap-3">
+                {/* 分享按钮 */}
+                <ShareButton language={currentLanguage} />
+                
+                {/* GitHub 链接 */}
+                <a
+                  href="https://github.com/skingko/Social_media_card"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                  title="GitHub"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                  <span className="hidden sm:inline text-sm">GitHub</span>
+                </a>
+                
+                {/* 简化的语言切换器 */}
+                <LanguageSwitcher 
+                  currentLanguage={currentLanguage}
+                  onLanguageChange={handleLanguageChange}
+                />
               </div>
             </div>
-            
-            <div className="flex gap-2 flex-1">
-              <Button 
-                onClick={() => setIsEditing(!isEditing)}
-                variant={isEditing ? "default" : "outline"}
-                className="flex-1 sm:flex-none sm:min-w-[120px]"
-                size="sm"
-              >
-                <Edit3 className="mr-1 h-4 w-4" />
-                <span className="hidden sm:inline">{isEditing ? '完成编辑' : '编辑内容'}</span>
-                <span className="sm:hidden">{isEditing ? '完成' : '编辑'}</span>
-              </Button>
-              <Button 
-                onClick={generateImage} 
-                disabled={isGenerating}
-                className={`flex-1 sm:flex-none sm:min-w-[120px] text-white ${theme.button}`}
-                size="sm"
-              >
-                <Download className="mr-1 h-4 w-4" />
-                <span className="hidden sm:inline">{isGenerating ? '生成中...' : '生成图片'}</span>
-                <span className="sm:hidden">{isGenerating ? '生成...' : '生成'}</span>
-              </Button>
-              <Button
-                onClick={() => setLayoutMode(layoutMode === 'vertical' ? 'horizontal' : 'vertical')}
-                variant="outline"
-                size="sm"
-                className="flex-shrink-0"
-              >
-                <RotateCw className="mr-1 h-4 w-4" />
-                <span className="hidden sm:inline">{layoutMode === 'vertical' ? '横版' : '竖版'}</span>
-              </Button>
-            </div>
-          </div>
-          
-          {/* 第二行：主题选择 */}
-          <div className="flex gap-1 overflow-x-auto pb-1">
-            {Object.entries(themes).map(([key, themeConfig]) => (
-              <Button
-                key={key}
-                size="sm"
-                variant={currentTheme === key ? "default" : "outline"}
-                onClick={() => setCurrentTheme(key as ThemeKey)}
-                className="text-xs whitespace-nowrap flex-shrink-0"
-              >
-                <Palette className="mr-1 h-3 w-3" />
-                {themeConfig.name}
-              </Button>
-            ))}
           </div>
         </div>
-      </div>
 
-      {/* 主要内容 - 左右分栏：左编辑，右预览 */}
-      <div className="pt-28 pb-8 px-4">
-        <div className="max-w-7xl mx-auto">
-          {isEditing ? (
-            <div className="flex flex-col lg:flex-row gap-4 min-h-[calc(100vh-8rem)]">
-              {/* 左侧编辑面板 */}
-              <div className="w-full lg:w-1/2 bg-white rounded-lg shadow-lg overflow-y-auto p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">编辑内容</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">标题</label>
-                  <input
-                    type="text"
-                    value={content.title}
-                    onChange={(e) => updateContent('title', e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">副标题</label>
-                  <input
-                    type="text"
-                    value={content.subtitle}
-                    onChange={(e) => updateContent('subtitle', e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded"
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium text-gray-700">描述内容</label>
+        {/* 主要内容 - 新布局：左侧风格选择，右侧功能区 */}
+        <div className="pt-24 pb-8 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col lg:flex-row gap-6">
+              
+              {/* 左侧：风格选择区 */}
+              <div className="w-full lg:w-80 space-y-4">
+                {/* 主题风格选择 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Palette className="w-5 h-5" />
+                      {t.ui.selectTheme}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-1 gap-2">
+                      {Object.entries(themes).map(([key, themeConfig]) => (
+                        <Button
+                          key={key}
+                          variant={currentTheme === key ? "default" : "outline"}
+                          onClick={() => setCurrentTheme(key as ThemeKey)}
+                          className="justify-start"
+                          size="sm"
+                        >
+                          <div className={`w-4 h-4 rounded-full mr-2 ${themeConfig.primary}`}></div>
+                          {themeConfig.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 布局模式选择 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <RotateCw className="w-5 h-5" />
+                      {t.ui.layoutMode}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
                     <Button
-                      type="button"
+                      variant={layoutMode === 'vertical' ? "default" : "outline"}
+                      onClick={() => setLayoutMode('vertical')}
+                      className="w-full justify-start"
                       size="sm"
-                      variant="ghost"
-                      onClick={toggleDescriptionVisibility}
-                      className={`px-2 py-1 text-xs ${
-                        content.descriptionVisible 
-                          ? 'text-green-600 hover:text-green-700 hover:bg-green-50' 
-                          : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
-                      }`}
                     >
-                      {content.descriptionVisible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                      📱 {t.nav.vertical}
+                    </Button>
+                    <Button
+                      variant={layoutMode === 'horizontal' ? "default" : "outline"}
+                      onClick={() => setLayoutMode('horizontal')}
+                      className="w-full justify-start"
+                      size="sm"
+                    >
+                      💻 {t.nav.horizontal}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* 右侧：功能区和预览 */}
+              <div className="flex-1">
+                {/* 功能按钮区 */}
+                <div className="mb-6 bg-white rounded-lg shadow-sm border p-4">
+                  <div className="flex flex-wrap gap-3">
+                    <Button 
+                      onClick={() => setIsEditing(!isEditing)}
+                      variant={isEditing ? "default" : "outline"}
+                      className="flex-1 sm:flex-none sm:min-w-[140px]"
+                    >
+                      <Edit3 className="mr-2 h-4 w-4" />
+                      {isEditing ? t.nav.finishEdit : t.nav.editContent}
+                    </Button>
+                    <Button 
+                      onClick={generateImage} 
+                      disabled={isGenerating}
+                      className={`flex-1 sm:flex-none sm:min-w-[140px] text-white ${theme.button}`}
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      {isGenerating ? t.nav.generating : t.nav.generateImage}
                     </Button>
                   </div>
-                  <textarea
-                    value={content.description}
-                    onChange={(e) => updateContent('description', e.target.value)}
-                    rows={3}
-                    className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded resize-none"
-                  />
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">功能特性（可拖拽排序）</label>
-                  {content.features.map((feature, index) => (
-                    <div 
-                      key={index} 
-                      className={`mb-2 flex gap-2 items-center p-2 rounded transition-all duration-200 ${
-                        draggedIndex === index ? 'opacity-50 scale-95' : ''
-                      } ${
-                        dragOverIndex === index ? 'bg-blue-50 border-blue-200 border-2 border-dashed' : 'bg-white border border-gray-200'
-                      }`}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, index)}
-                      onDragOver={(e) => handleDragOver(e, index)}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => handleDrop(e, index)}
-                      onDragEnd={handleDragEnd}
-                    >
-                      <GripVertical className="w-4 h-4 text-gray-400 cursor-grab active:cursor-grabbing flex-shrink-0" />
-                      <input
-                        type="text"
-                        value={feature.text}
-                        onChange={(e) => updateArrayContent('features', index, e.target.value)}
-                        className="flex-1 px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded border-0"
-                        placeholder={`功能 ${index + 1}`}
-                      />
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => toggleFeatureVisibility(index)}
-                        className={`px-2 py-1 text-xs flex-shrink-0 ${
-                          feature.visible 
-                            ? 'text-green-600 hover:text-green-700 hover:bg-green-50' 
-                            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
-                        }`}
-                      >
-                        {feature.visible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => removeArrayItem('features', index)}
-                        className="px-2 py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
-                      >
-                        <X className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    onClick={() => addArrayItem('features')}
-                    className="mt-2 text-xs w-full"
-                  >
-                    + 添加功能
-                  </Button>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">二维码图片</label>
-                  <div className="space-y-3">
-                    {/* URL 输入 */}
-                    <input
-                      type="text"
-                      value={content.qrCodeUrl}
-                      onChange={(e) => updateContent('qrCodeUrl', e.target.value)}
-                      placeholder="输入二维码图片的URL地址"
-                      className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded"
-                    />
-                    
-                    {/* 拖拽上传区域 */}
-                    <div 
-                      className={`relative border-2 border-dashed rounded-lg p-4 text-center transition-all duration-200 cursor-pointer ${
-                        isDragOver 
-                          ? 'border-blue-400 bg-blue-50' 
-                          : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
-                      }`}
-                      onDragOver={handleDragOverUpload}
-                      onDragLeave={handleDragLeaveUpload}
-                      onDrop={handleDropUpload}
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <Upload className={`w-8 h-8 mx-auto mb-2 ${
-                        isDragOver ? 'text-blue-500' : 'text-gray-400'
-                      }`} />
-                      <p className={`text-sm ${
-                        isDragOver ? 'text-blue-600' : 'text-gray-600'
-                      }`}>
-                        {isDragOver ? '释放以上传图片' : '拖拽图片到此处或点击上传'}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">支持 PNG、JPG、GIF 格式</p>
-                      
-                      {/* 上传进度条 */}
-                      {uploadProgress > 0 && uploadProgress < 100 && (
-                        <div className="mt-2">
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                              style={{ width: `${uploadProgress}%` }}
-                            ></div>
-                          </div>
-                          <p className="text-xs text-gray-600 mt-1">上传中... {Math.round(uploadProgress)}%</p>
+
+                {isEditing ? (
+                  <div className="space-y-6">
+                    {/* 预览面板 - 可折叠 */}
+                    <Card>
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle>{t.ui.previewEffect}</CardTitle>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsPreviewExpanded(!isPreviewExpanded)}
+                            className="flex items-center gap-2"
+                          >
+                            {isPreviewExpanded ? (
+                              <>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                </svg>
+                                {t.ui.collapsePreview}
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                                {t.ui.expandPreview}
+                              </>
+                            )}
+                          </Button>
                         </div>
-                      )}
-                    </div>
-                    
-                    {/* 隐藏的文件输入 */}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                    
-                    {/* 图片预览和操作 */}
-                    {content.qrCodeUrl && content.qrCodeUrl !== defaultQRCodePath && (
-                      <div className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
-                        <img 
-                          src={content.qrCodeUrl} 
-                          alt="二维码预览" 
-                          className="w-12 h-12 object-cover rounded border"
-                        />
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-900">二维码已上传</p>
-                          <p className="text-xs text-gray-500">点击右侧按钮可清除</p>
-                        </div>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="ghost"
-                          onClick={clearQRCode}
-                          className="px-2 py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <X className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-              {/* 右侧预览面板 */}
-              <div className="w-full lg:w-1/2 bg-gray-50 rounded-lg overflow-y-auto flex items-center justify-center p-2 sm:p-4 lg:p-6">
-              {/* 海报预览 */}
-              <div ref={containerRef} className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-visible">
-                <div
-                  ref={cardRef}
-                  className={`poster-card shadow-xl overflow-hidden relative mx-auto`}
-                  style={{ width: `${baseWidth}px`, transform: `scale(${previewScale})`, transformOrigin: 'top left' }}
-                >
-                  {/* 边框背景层 */}
-                  <div className="absolute inset-0 flex">
-                    <div className={`w-1/3 ${theme.primary} relative`}>
-                      <GridBackground />
-                    </div>
-                    <div className="w-2/3 bg-gray-300 relative">
-                      <GridBackground />
-                    </div>
-                  </div>
-                  
-                  {/* 白色内容层 */}
-                  <div className="relative bg-white m-2 p-2">
-                    <div className={layoutMode === 'vertical' ? 'flex flex-col' : 'flex flex-row'}>
-                      {/* 内容区域 */}
-                      <div className={`flex flex-col items-center justify-center text-center ${
-                        layoutMode === 'vertical' ? 'flex-1 p-4' : 'flex-1 p-6'
-                      }`}>
-                        {/* 蓝色标题栏 */}
-                        <div className={`${theme.primary} text-white mb-3 w-full ${
-                          layoutMode === 'vertical' ? 'py-2 px-3' : 'py-3 px-4'
-                        }`}>
-                          <h1 className={`font-bold leading-none capture-title ${
-                            layoutMode === 'vertical' ? 'text-lg' : 'text-xl'
-                          }`}>{content.title}</h1>
-                        </div>
-                        
-                        {/* 副标题 */}
-                        <div className="mb-3">
-                          <h2 className={`text-black font-semibold ${
-                            layoutMode === 'vertical' ? 'text-base' : 'text-lg'
-                          }`}>{content.subtitle}</h2>
-                        </div>
-                        
-                        {/* 服务项目列表 */}
-                        <div className="space-y-1 w-full">
-                          {content.descriptionVisible && (
-                            <div className="py-1">
-                              <h3 className={`font-medium text-black ${
-                                layoutMode === 'vertical' ? 'text-sm' : 'text-base'
-                              }`}>{content.description}</h3>
-                            </div>
-                          )}
-                          {/* 每两个特性一行 */}
-                          {Array.from({ length: Math.ceil(content.features.filter(f => f.visible).length / 2) }, (_, rowIndex) => {
-                            const visibleFeatures = content.features.filter(f => f.visible && f.text.trim())
-                            const startIndex = rowIndex * 2
-                            const rowFeatures = visibleFeatures.slice(startIndex, startIndex + 2).map(f => f.text)
-                            return rowFeatures.length > 0 ? (
-                              <div key={rowIndex} className="py-1">
-                                <h3 className={`font-medium text-black ${
-                                  layoutMode === 'vertical' ? 'text-sm' : 'text-base'
-                                }`}>{rowFeatures.join(' | ')}</h3>
+                      </CardHeader>
+                      {isPreviewExpanded && (
+                        <CardContent>
+                          <div className="bg-gray-50 rounded-lg flex items-center justify-center p-4">
+                            <div ref={containerRef} className="bg-white flex items-center justify-center p-4 overflow-visible">
+                              <div
+                                ref={cardRef}
+                                className={`poster-card shadow-xl overflow-hidden relative mx-auto`}
+                                style={{ width: `${baseWidth}px`, transform: `scale(${previewScale})`, transformOrigin: 'top left' }}
+                              >
+                                {/* 边框背景层 */}
+                                <div className="absolute inset-0 flex">
+                                  <div className={`w-1/3 ${theme.primary} relative`}>
+                                    <GridBackground />
+                                  </div>
+                                  <div className="w-2/3 bg-gray-300 relative">
+                                    <GridBackground />
+                                  </div>
+                                </div>
+                                
+                                {/* 白色内容层 */}
+                                <div className="relative bg-white m-2 p-2">
+                                  <div className={layoutMode === 'vertical' ? 'flex flex-col' : 'flex flex-row'}>
+                                    {/* 内容区域 */}
+                                    <div className={`flex flex-col items-center justify-center text-center ${
+                                      layoutMode === 'vertical' ? 'flex-1 p-4' : 'flex-1 p-6'
+                                    }`}>
+                                      {/* 蓝色标题栏 */}
+                                      <div className={`${theme.primary} text-white mb-3 w-full ${
+                                        layoutMode === 'vertical' ? 'py-2 px-3' : 'py-3 px-4'
+                                      }`}>
+                                        <h1 className={`font-bold leading-none capture-title ${
+                                          layoutMode === 'vertical' ? 'text-lg' : 'text-xl'
+                                        }`}>{content.title}</h1>
+                                      </div>
+                                      
+                                      {/* 副标题 */}
+                                      <div className="mb-3">
+                                        <h2 className={`text-black font-semibold ${
+                                          layoutMode === 'vertical' ? 'text-base' : 'text-lg'
+                                        }`}>{content.subtitle}</h2>
+                                      </div>
+                                      
+                                      {/* 服务项目列表 */}
+                                      <div className="space-y-1 w-full">
+                                        {content.descriptionVisible && (
+                                          <div className="py-1">
+                                            <h3 className={`font-medium text-black ${
+                                              layoutMode === 'vertical' ? 'text-sm' : 'text-base'
+                                            }`}>{content.description}</h3>
+                                          </div>
+                                        )}
+                                        {/* 每两个特性一行 */}
+                                        {Array.from({ length: Math.ceil(content.features.filter(f => f.visible).length / 2) }, (_, rowIndex) => {
+                                          const visibleFeatures = content.features.filter(f => f.visible && f.text.trim())
+                                          const startIndex = rowIndex * 2
+                                          const rowFeatures = visibleFeatures.slice(startIndex, startIndex + 2).map(f => f.text)
+                                          return rowFeatures.length > 0 ? (
+                                            <div key={rowIndex} className="py-1">
+                                              <h3 className={`font-medium text-black ${
+                                                layoutMode === 'vertical' ? 'text-sm' : 'text-base'
+                                              }`}>{rowFeatures.join(' | ')}</h3>
+                                            </div>
+                                          ) : null
+                                        })}
+                                      </div>
+                                    </div>
+                                    
+                                    {/* 二维码和按钮区域 */}
+                                    <div className={`bg-gray-50 flex items-center space-y-3 ${
+                                      layoutMode === 'vertical' 
+                                        ? 'p-3 flex-col' 
+                                        : 'p-4 flex-col justify-center w-40'
+                                    }`}>
+                                      {/* 二维码 */}
+                                      <div className={`bg-white border border-gray-400 flex items-center justify-center overflow-hidden ${
+                                        layoutMode === 'vertical' ? 'w-20 h-20' : 'w-24 h-24'
+                                      }`}>
+                                        <img 
+                                          src={content.qrCodeUrl}
+                                          alt="二维码"
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                      
+                                      {/* 点击了解按钮（使用div避免flex导致的基线偏移） */}
+                                      <div
+                                        role="button"
+                                        className={`w-full text-white font-medium text-center rounded-md capture-cta ${theme.button} ${
+                                          layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
+                                        }`}
+                                      >
+                                        {t.poster.clickToLearn}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                            ) : null
-                          })}
-                        </div>
-                      </div>
-                      
-                      {/* 二维码和按钮区域 */}
-                      <div className={`bg-gray-50 flex items-center space-y-3 ${
-                        layoutMode === 'vertical' 
-                          ? 'p-3 flex-col' 
-                          : 'p-4 flex-col justify-center w-40'
-                      }`}>
-                        {/* 二维码 */}
-                        <div className={`bg-white border border-gray-400 flex items-center justify-center overflow-hidden ${
-                          layoutMode === 'vertical' ? 'w-20 h-20' : 'w-24 h-24'
-                        }`}>
-                          <img 
-                            src={content.qrCodeUrl}
-                            alt="二维码"
-                            className="w-full h-full object-cover"
+                            </div>
+                          </div>
+                        </CardContent>
+                      )}
+                    </Card>
+                    
+                    {/* 编辑面板 */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>{t.editor.editContent}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium text-gray-700 mb-2 block">{t.editor.title}</label>
+                          <input
+                            type="text"
+                            value={content.title}
+                            onChange={(e) => updateContent('title', e.target.value)}
+                            className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded"
                           />
                         </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700 mb-2 block">{t.editor.subtitle}</label>
+                          <input
+                            type="text"
+                            value={content.subtitle}
+                            onChange={(e) => updateContent('subtitle', e.target.value)}
+                            className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="text-sm font-medium text-gray-700">{t.editor.description}</label>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="ghost"
+                              onClick={toggleDescriptionVisibility}
+                              className={`px-2 py-1 text-xs ${
+                                content.descriptionVisible 
+                                  ? 'text-green-600 hover:text-green-700 hover:bg-green-50' 
+                                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                              }`}
+                            >
+                              {content.descriptionVisible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                            </Button>
+                          </div>
+                          <textarea
+                            value={content.description}
+                            onChange={(e) => updateContent('description', e.target.value)}
+                            rows={3}
+                            className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded resize-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700 mb-2 block">{t.editor.features}</label>
+                          {content.features.map((feature, index) => (
+                            <div 
+                              key={index} 
+                              className={`mb-2 flex gap-2 items-center p-2 rounded transition-all duration-200 ${
+                                draggedIndex === index ? 'opacity-50 scale-95' : ''
+                              } ${
+                                dragOverIndex === index ? 'bg-blue-50 border-blue-200 border-2 border-dashed' : 'bg-white border border-gray-200'
+                              }`}
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, index)}
+                              onDragOver={(e) => handleDragOver(e, index)}
+                              onDragLeave={handleDragLeave}
+                              onDrop={(e) => handleDrop(e, index)}
+                              onDragEnd={handleDragEnd}
+                            >
+                              <GripVertical className="w-4 h-4 text-gray-400 cursor-grab active:cursor-grabbing flex-shrink-0" />
+                              <input
+                                type="text"
+                                value={feature.text}
+                                onChange={(e) => updateArrayContent('features', index, e.target.value)}
+                                className="flex-1 px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded border-0"
+                                placeholder={`功能 ${index + 1}`}
+                              />
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => toggleFeatureVisibility(index)}
+                                className={`px-2 py-1 text-xs flex-shrink-0 ${
+                                  feature.visible 
+                                    ? 'text-green-600 hover:text-green-700 hover:bg-green-50' 
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                                }`}
+                              >
+                                {feature.visible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                              </Button>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => removeArrayItem('features', index)}
+                                className="px-2 py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
+                              >
+                                <X className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => addArrayItem('features')}
+                            className="mt-2 text-xs w-full"
+                          >
+                            {t.editor.addFeature}
+                          </Button>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700 mb-2 block">{t.editor.qrCode}</label>
+                          <div className="space-y-3">
+                            {/* URL 输入 */}
+                            <input
+                              type="text"
+                              value={content.qrCodeUrl}
+                              onChange={(e) => updateContent('qrCodeUrl', e.target.value)}
+                              placeholder="输入二维码图片的URL地址"
+                              className="w-full px-3 py-2 bg-gray-50 text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-400 rounded"
+                            />
+                            
+                            {/* 拖拽上传区域 */}
+                            <div 
+                              className={`relative border-2 border-dashed rounded-lg p-4 text-center transition-all duration-200 cursor-pointer ${
+                                isDragOver 
+                                  ? 'border-blue-400 bg-blue-50' 
+                                  : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                              }`}
+                              onDragOver={handleDragOverUpload}
+                              onDragLeave={handleDragLeaveUpload}
+                              onDrop={handleDropUpload}
+                              onClick={() => fileInputRef.current?.click()}
+                            >
+                              <Upload className={`w-8 h-8 mx-auto mb-2 ${
+                                isDragOver ? 'text-blue-500' : 'text-gray-400'
+                              }`} />
+                              <p className={`text-sm ${
+                                isDragOver ? 'text-blue-600' : 'text-gray-600'
+                              }`}>
+                                {isDragOver ? '释放以上传图片' : t.editor.dragUpload}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">{t.editor.uploadSupport}</p>
+                              
+                              {/* 上传进度条 */}
+                              {uploadProgress > 0 && uploadProgress < 100 && (
+                                <div className="mt-2">
+                                  <div className="w-full bg-gray-200 rounded-full h-2">
+                                    <div 
+                                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                                      style={{ width: `${uploadProgress}%` }}
+                                    ></div>
+                                  </div>
+                                  <p className="text-xs text-gray-600 mt-1">{t.editor.uploading} {Math.round(uploadProgress)}%</p>
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* 隐藏的文件输入 */}
+                            <input
+                              ref={fileInputRef}
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageUpload}
+                              className="hidden"
+                            />
+                            
+                            {/* 图片预览和操作 */}
+                            {content.qrCodeUrl && content.qrCodeUrl !== defaultQRCodePath && (
+                              <div className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
+                                <img 
+                                  src={content.qrCodeUrl} 
+                                  alt="二维码预览" 
+                                  className="w-12 h-12 object-cover rounded border"
+                                />
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium text-gray-900">{t.editor.qrUploaded}</p>
+                                  <p className="text-xs text-gray-500">{t.editor.clickRemove}</p>
+                                </div>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={clearQRCode}
+                                  className="px-2 py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <X className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ) : (
+                  /* 非编辑模式 - 居中显示 */
+                  <div className="bg-gray-50 rounded-lg flex items-center justify-center p-4 min-h-[500px]">
+                    <div id="poster-content" ref={containerRef} className="bg-white flex items-center justify-center p-4 overflow-visible">
+                      <div
+                        ref={cardRef}
+                        className={`poster-card shadow-xl overflow-hidden relative mx-auto`}
+                        style={{ width: `${baseWidth}px`, transform: `scale(${previewScale})`, transformOrigin: 'top left' }}
+                      >
+                        {/* 边框背景层 */}
+                        <div className="absolute inset-0 flex">
+                          <div className={`w-1/3 ${theme.primary} relative`}>
+                            <GridBackground />
+                          </div>
+                          <div className="w-2/3 bg-gray-300 relative">
+                            <GridBackground />
+                          </div>
+                        </div>
                         
-                        {/* 点击了解按钮（使用div避免flex导致的基线偏移） */}
-                        <div
-                          role="button"
-                          className={`w-full text-white font-medium text-center rounded-md capture-cta ${theme.button} ${
-                            layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
-                          }`}
-                        >
-                          点击了解
+                        {/* 白色内容层 */}
+                        <div className="relative bg-white m-2 p-2">
+                          <div className={layoutMode === 'vertical' ? 'flex flex-col' : 'flex flex-row'}>
+                            {/* 内容区域 */}
+                            <div className={`flex flex-col items-center justify-center text-center ${
+                              layoutMode === 'vertical' ? 'flex-1 p-4' : 'flex-1 p-6'
+                            }`}>
+                              {/* 蓝色标题栏 */}
+                              <div className={`${theme.primary} text-white mb-3 w-full ${
+                                layoutMode === 'vertical' ? 'py-2 px-3' : 'py-3 px-4'
+                              }`}>
+                                <h1 className={`font-bold leading-none capture-title ${
+                                  layoutMode === 'vertical' ? 'text-lg' : 'text-xl'
+                                }`}>{content.title}</h1>
+                              </div>
+                              
+                              {/* 副标题 */}
+                              <div className="mb-3">
+                                <h2 className={`text-black font-semibold ${
+                                  layoutMode === 'vertical' ? 'text-base' : 'text-lg'
+                                }`}>{content.subtitle}</h2>
+                              </div>
+                              
+                              {/* 服务项目列表 */}
+                              <div className="space-y-1 w-full">
+                                {content.descriptionVisible && (
+                                  <div className="py-1">
+                                    <h3 className={`font-medium text-black ${
+                                      layoutMode === 'vertical' ? 'text-sm' : 'text-base'
+                                    }`}>{content.description}</h3>
+                                  </div>
+                                )}
+                                {/* 每两个特性一行 */}
+                                {Array.from({ length: Math.ceil(content.features.filter(f => f.visible).length / 2) }, (_, rowIndex) => {
+                                  const visibleFeatures = content.features.filter(f => f.visible && f.text.trim())
+                                  const startIndex = rowIndex * 2
+                                  const rowFeatures = visibleFeatures.slice(startIndex, startIndex + 2).map(f => f.text)
+                                  return rowFeatures.length > 0 ? (
+                                    <div key={rowIndex} className="py-1">
+                                      <h3 className={`font-medium text-black ${
+                                        layoutMode === 'vertical' ? 'text-sm' : 'text-base'
+                                      }`}>{rowFeatures.join(' | ')}</h3>
+                                    </div>
+                                  ) : null
+                                })}
+                              </div>
+                            </div>
+                            
+                            {/* 二维码和按钮区域 */}
+                            <div className={`bg-gray-50 flex items-center space-y-3 ${
+                              layoutMode === 'vertical' 
+                                ? 'p-3 flex-col' 
+                                : 'p-4 flex-col justify-center w-40'
+                            }`}>
+                              {/* 二维码 */}
+                              <div className={`bg-white border border-gray-400 flex items-center justify-center overflow-hidden ${
+                                layoutMode === 'vertical' ? 'w-20 h-20' : 'w-24 h-24'
+                              }`}>
+                                <img 
+                                  src={content.qrCodeUrl}
+                                  alt="二维码"
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              
+                              {/* 点击了解按钮（使用div避免flex导致的基线偏移） */}
+                              <div
+                                role="button"
+                                className={`w-full text-white font-medium text-center rounded-md capture-cta ${theme.button} ${
+                                  layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
+                                }`}
+                              >
+                                {t.poster.clickToLearn}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
-            ) : (
-            /* 非编辑模式 - 居中显示 */
-            <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] p-2 sm:p-4">
-              <div id="poster-content" ref={containerRef} className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-visible">
-                <div
-                  ref={cardRef}
-                  className={`poster-card shadow-xl overflow-hidden relative mx-auto`}
-                  style={{ width: `${baseWidth}px`, transform: `scale(${previewScale})`, transformOrigin: 'top left' }}
-                >
-                {/* 边框背景层 */}
-                <div className="absolute inset-0 flex">
-                  <div className={`w-1/3 ${theme.primary} relative`}>
-                    <GridBackground />
-                  </div>
-                  <div className="w-2/3 bg-gray-300 relative">
-                    <GridBackground />
-                  </div>
-                </div>
-                
-                {/* 白色内容层 */}
-                <div className="relative bg-white m-2 p-2">
-                  <div className={layoutMode === 'vertical' ? 'flex flex-col' : 'flex flex-row'}>
-                    {/* 内容区域 */}
-                    <div className={`flex flex-col items-center justify-center text-center ${
-                      layoutMode === 'vertical' ? 'flex-1 p-4' : 'flex-1 p-6'
-                    }`}>
-                      {/* 蓝色标题栏 */}
-                      <div className={`${theme.primary} text-white mb-3 w-full ${
-                        layoutMode === 'vertical' ? 'py-2 px-3' : 'py-3 px-4'
-                      }`}>
-                        <h1 className={`font-bold leading-none capture-title ${
-                          layoutMode === 'vertical' ? 'text-lg' : 'text-xl'
-                        }`}>{content.title}</h1>
-                      </div>
-                      
-                      {/* 副标题 */}
-                      <div className="mb-3">
-                        <h2 className={`text-black font-semibold ${
-                          layoutMode === 'vertical' ? 'text-base' : 'text-lg'
-                        }`}>{content.subtitle}</h2>
-                      </div>
-                      
-                      {/* 服务项目列表 */}
-                      <div className="space-y-1 w-full">
-                        {content.descriptionVisible && (
-                          <div className="py-1">
-                            <h3 className={`font-medium text-black ${
-                              layoutMode === 'vertical' ? 'text-sm' : 'text-base'
-                            }`}>{content.description}</h3>
-                          </div>
-                        )}
-                        {/* 每两个特性一行 */}
-                        {Array.from({ length: Math.ceil(content.features.filter(f => f.visible).length / 2) }, (_, rowIndex) => {
-                          const visibleFeatures = content.features.filter(f => f.visible && f.text.trim())
-                          const startIndex = rowIndex * 2
-                          const rowFeatures = visibleFeatures.slice(startIndex, startIndex + 2).map(f => f.text)
-                          return rowFeatures.length > 0 ? (
-                            <div key={rowIndex} className="py-1">
-                              <h3 className={`font-medium text-black ${
-                                layoutMode === 'vertical' ? 'text-sm' : 'text-base'
-                              }`}>{rowFeatures.join(' | ')}</h3>
-                            </div>
-                          ) : null
-                        })}
-                      </div>
-                    </div>
-                    
-                    {/* 二维码和按钮区域 */}
-                    <div className={`bg-gray-50 flex items-center space-y-3 ${
-                      layoutMode === 'vertical' 
-                        ? 'p-3 flex-col' 
-                        : 'p-4 flex-col justify-center w-40'
-                    }`}>
-                      {/* 二维码 */}
-                      <div className={`bg-white border border-gray-400 flex items-center justify-center overflow-hidden ${
-                        layoutMode === 'vertical' ? 'w-20 h-20' : 'w-24 h-24'
-                      }`}>
-                        <img 
-                          src={content.qrCodeUrl}
-                          alt="二维码"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      
-                      {/* 点击了解按钮（使用div避免flex导致的基线偏移） */}
-                      <div
-                        role="button"
-                        className={`w-full text-white font-medium text-center rounded-md capture-cta ${theme.button} ${
-                          layoutMode === 'vertical' ? 'py-2 text-xs' : 'py-2 text-sm'
-                        }`}
-                      >
-                        点击了解
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          )}
         </div>
+
+        {/* 底部信息 */}
+        <Footer language={currentLanguage} />
       </div>
-    </div>
+    </>
   )
 }

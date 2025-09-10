@@ -1,6 +1,8 @@
 # 社交媒体名片生成器
 
-**🌐 语言**: [English](./README.md) | [中文](#)
+**🌐 官网**: [www.sm-card.com](https://www.sm-card.com)
+
+**🌐 语言**: [English](./README.md) | [中文](#) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Español](./README.es.md)
 
 一个现代化的社交媒体名片生成工具，支持多种主题和即时导出功能。
 
@@ -238,7 +240,24 @@ npm run build
 ## 📞 联系方式
 
 - **GitHub**: [@skingko](https://github.com/skingko)
+- **微信号**: skingko
 - **项目链接**: [社交媒体名片生成器](https://github.com/skingko/Social_media_card)
+
+## 📱 关注我们
+
+<div align="center">
+
+### 微信公众号
+<img src="https://test-models.oss-cn-shanghai.aliyuncs.com/pics_go/202509110044079.jpg" width="200" alt="微信公众号二维码">
+
+*扫码关注微信公众号获取最新动态*
+
+### 添加作者微信
+<img src="https://test-models.oss-cn-shanghai.aliyuncs.com/pics_go/202509102242338.png" width="200" alt="作者微信二维码">
+
+*扫码添加作者微信：skingko*
+
+</div>
 
 ## 🙏 致谢
 

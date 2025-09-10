@@ -2,6 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 二维码放大效果样式 */
+.qr-code-container {
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s ease-in-out;
+}
+
+.qr-code-container img {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* 确保图片保持比例 */
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+/* 桌面端悬停效果 */
+@media (min-width: 769px) {
+  .qr-code-container:hover img {
+    transform: scale(1.8);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(34, 197, 94, 0.3);
+    z-index: 50;
+    border-color: rgb(34, 197, 94);
+  }
+  
+  .qr-code-container:hover {
+    z-index: 50;
+  }
+}
+
+/* 移动端点击效果 */
+@media (max-width: 768px) {
+  .qr-code-container:active img {
+    transform: scale(1.6);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(34, 197, 94, 0.3);
+    z-index: 50;
+    border-color: rgb(34, 197, 94);
+  }
+  
+  .qr-code-container:active {
+    z-index: 50;
+  }
+}
+
+/* 通用放大效果 */
+.qr-code-container:hover img,
+.qr-code-container:active img {
+  position: relative;
+  transform-origin: center;
+}
+
+/* 确保放大的二维码不会被其他元素遮挡 */
+.qr-code-container:hover,
+.qr-code-container:active {
+  z-index: 50;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
