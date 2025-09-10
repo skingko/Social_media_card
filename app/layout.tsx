@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI软件测评说 - 海报生成器',
-  description: 'AI软件测评说专业海报生成工具，支持内容编辑和多种风格主题，一键生成高质量公众号宣传图片',
+  title: 'Social_media_card_社交媒体名片生成',
+  description: '社交媒体名片生成器 - 专业的名片设计工具，支持多种主题风格、拖拽排序、实时预览，一键生成高质量社交媒体名片',
 }
 
 export default function RootLayout({
