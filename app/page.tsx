@@ -173,16 +173,24 @@ export default function Home() {
       // 查找卡片元素（不包含外层容器）
       const cardElement = document.querySelector('.poster-card') as HTMLElement
       if (cardElement) {
-        // 临时移除移动端缩放效果，确保生成原始尺寸的图片
-        const originalTransform = cardElement.style.transform
-        const originalTransformOrigin = cardElement.style.transformOrigin
+        // 保存原始样式
+        const originalStyles = {
+          transform: cardElement.style.transform,
+          transformOrigin: cardElement.style.transformOrigin,
+          maxWidth: cardElement.style.maxWidth,
+          width: cardElement.style.width,
+          margin: cardElement.style.margin
+        }
         
-        // 重置transform以获得原始尺寸
+        // 重置为固定尺寸以确保生成原始大小的图片
         cardElement.style.transform = 'none'
         cardElement.style.transformOrigin = 'initial'
+        cardElement.style.maxWidth = layoutMode === 'vertical' ? '384px' : '672px' // max-w-sm = 384px, max-w-2xl = 672px
+        cardElement.style.width = layoutMode === 'vertical' ? '384px' : '672px'
+        cardElement.style.margin = '0'
         
         // 等待样式应用
-        await new Promise(resolve => setTimeout(resolve, 100))
+        await new Promise(resolve => setTimeout(resolve, 150))
         
         const canvas = await html2canvas(cardElement, {
           backgroundColor: null,
@@ -194,9 +202,12 @@ export default function Home() {
           height: cardElement.scrollHeight
         })
         
-        // 恢复原始的transform样式
-        cardElement.style.transform = originalTransform
-        cardElement.style.transformOrigin = originalTransformOrigin
+        // 恢复原始样式
+        cardElement.style.transform = originalStyles.transform
+        cardElement.style.transformOrigin = originalStyles.transformOrigin
+        cardElement.style.maxWidth = originalStyles.maxWidth
+        cardElement.style.width = originalStyles.width
+        cardElement.style.margin = originalStyles.margin
         
         const link = document.createElement('a')
         link.download = `${content.title}-${themes[currentTheme].name}.png`
@@ -641,9 +652,9 @@ export default function Home() {
               {/* 海报预览 */}
               <div className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-hidden">
                 <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
-                    layoutMode === 'vertical' ? 'max-w-sm' : 'max-w-2xl'
-                  } ${
-                    layoutMode === 'horizontal' ? 'scale-50 sm:scale-60 md:scale-75 lg:scale-90 xl:scale-100 origin-center' : ''
+                    layoutMode === 'vertical' 
+                      ? 'max-w-sm mx-auto' 
+                      : 'max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto'
                   }`}>
                   {/* 边框背景层 */}
                   <div className="absolute inset-0 flex">
@@ -734,9 +745,9 @@ export default function Home() {
             <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] p-2 sm:p-4">
               <div id="poster-content" className="bg-white flex items-center justify-center p-2 sm:p-4 overflow-hidden">
                 <div className={`poster-card w-full shadow-xl overflow-hidden relative ${
-                  layoutMode === 'vertical' ? 'max-w-sm' : 'max-w-2xl'
-                } ${
-                  layoutMode === 'horizontal' ? 'scale-50 sm:scale-60 md:scale-75 lg:scale-90 xl:scale-100 origin-center' : ''
+                  layoutMode === 'vertical' 
+                    ? 'max-w-sm mx-auto' 
+                    : 'max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto'
                 }`}>
                 {/* 边框背景层 */}
                 <div className="absolute inset-0 flex">
