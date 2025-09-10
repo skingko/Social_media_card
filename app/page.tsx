@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Download, Bot, Edit3, Palette, CheckCircle, Star, Users, Zap, GripVertical, Upload, X, Eye, EyeOff, RotateCw } from 'lucide-react'
 import html2canvas from 'html2canvas'
-import defaultQRCode from '../public/wechat_code.png'
+import defaultQRCode from '/public/wechat_code.png'
 
 // 类型定义
 interface ThemeConfig {
