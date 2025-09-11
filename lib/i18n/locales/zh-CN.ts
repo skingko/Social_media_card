@@ -20,7 +20,9 @@ export const zhCN: Translation = {
     orange: '橙心',
     red: '画手',
     yellow: '山吹',
-    black: '极客黑'
+    black: '极客黑',
+    pink: '樱花粉',
+    dark: '深邃黑'
   },
   editor: {
     editContent: '编辑内容',
@@ -52,6 +54,7 @@ export const zhCN: Translation = {
     wechat: '微信号',
     followUs: '关注我们',
     author: '作者',
+    githubRepo: 'GitHub 仓库',
     addAuthorWechat: '添加作者微信',
     wechatPublic: '微信公众号',
     scanToFollow: '扫码关注',
