@@ -24,17 +24,26 @@ export const fr: Translation = {
     pink: 'Rose Élégant',
     dark: 'Sombre Moderne'
   },
-  content: {
-    name: 'Nom',
+  editor: {
+    editContent: 'Modifier le Contenu',
     title: 'Titre',
+    subtitle: 'Sous-titre',
+    description: 'Description',
+    name: 'Nom',
     company: 'Entreprise',
     phone: 'Téléphone',
     email: 'Email',
     website: 'Site Web',
     wechat: 'WeChat',
     bio: 'Biographie',
-    uploadQR: 'Télécharger QR',
-    features: 'Fonctionnalités'
+    features: 'Fonctionnalités',
+    addFeature: 'Ajouter Fonctionnalité',
+    qrCode: 'Code QR',
+    dragUpload: 'Glisser pour télécharger',
+    uploadSupport: 'PNG, JPG, GIF jusqu\'à 10MB',
+    uploading: 'Téléchargement...',
+    qrUploaded: 'QR téléchargé',
+    clickRemove: 'Cliquer pour supprimer'
   },
   ui: {
     selectTheme: 'Sélectionner le Thème',
@@ -57,6 +66,10 @@ export const fr: Translation = {
   },
   footer: {
     developer: 'Développé par',
+    github: 'GitHub',
+    wechat: 'WeChat',
+    followUs: 'Nous Suivre',
+    author: 'Auteur',
     githubRepo: 'Dépôt GitHub',
     addAuthorWechat: 'Ajouter WeChat de l\'Auteur',
     wechatPublic: 'Compte Public WeChat',
@@ -133,11 +146,21 @@ export const fr: Translation = {
         technology: 'Construit avec Next.js, React, TypeScript et Tailwind CSS.',
         team: 'Équipe de développeurs et designers expérimentés.',
         contact: 'Contactez-nous pour toute question ou suggestion.'
+      },
+      featureList: {
+        multiTheme: { title: 'Thèmes Multiples', description: 'Divers beaux thèmes pour différents scénarios' },
+        dragSort: { title: 'Glisser & Trier', description: 'Réorganiser librement les modules de fonctions' },
+        realTimePreview: { title: 'Aperçu Temps Réel', description: 'Ce que vous voyez est ce que vous obtenez' },
+        multiLanguage: { title: 'Support Multilingue', description: 'Support pour plus de 20 langues' },
+        highQuality: { title: 'Haute Qualité', description: 'Génération d\'images haute résolution en un clic' },
+        completelyFree: { title: 'Entièrement Gratuit', description: 'Toutes les fonctionnalités gratuites, aucune inscription requise' }
       }
     },
     faq: {
       title: 'Questions Fréquemment Posées',
       description: 'Questions communes sur le Générateur de Cartes',
+      moreQuestions: 'Avez-vous d\'autres questions?',
+      contactSupport: 'Si vous ne trouvez pas la réponse que vous cherchez, contactez notre équipe de support',
       questions: {
         q1: { question: 'Comment utiliser le générateur?', answer: 'Choisir thème, remplir infos, glisser modules, prévisualiser et générer.' },
         q2: { question: 'Quelles langues sont supportées?', answer: 'Plus de 20 langues incluant français, anglais, chinois, japonais, etc.' },
@@ -152,6 +175,8 @@ export const fr: Translation = {
     guide: {
       title: 'Guide d\'Utilisation',
       description: 'Apprenez à utiliser toutes les fonctionnalités',
+      simpleSteps: 'Seulement 5 étapes simples pour créer des cartes professionnelles:',
+      startCreatingNow: 'Commencez à créer votre carte professionnelle maintenant!',
       steps: {
         step1: { title: 'Choisir Thème', content: 'Sélectionner parmi plusieurs styles magnifiques.' },
         step2: { title: 'Remplir Infos', content: 'Entrer vos informations personnelles et de contact.' },
@@ -164,6 +189,13 @@ export const fr: Translation = {
       title: 'Politique de Confidentialité',
       description: 'Comment nous protégeons votre confidentialité',
       lastUpdated: '10 janvier 2025',
+      privacyCommitment: 'Engagement de Confidentialité',
+      privacyCommitmentText: 'Notre service fonctionne entièrement localement dans votre navigateur et ne collecte, stocke ou transmet aucune information personnelle.',
+      dataProcessingDetails: 'Détails du Traitement des Données',
+      yourRights: 'Vos Droits',
+      contactRightText: 'Contactez-nous à tout moment',
+      privacyQuestionsTitle: 'Questions sur la confidentialité?',
+      privacyQuestionsText: 'Si vous avez des questions sur notre politique de confidentialité, contactez-nous',
       sections: {
         overview: { title: 'Aperçu', content: 'Nous respectons votre confidentialité et protégeons vos données.' },
         dataCollection: { title: 'Collecte', content: 'Traitement local, aucun téléchargement de données personnelles.' },
@@ -177,6 +209,8 @@ export const fr: Translation = {
       title: 'Conditions d\'Utilisation',
       description: 'Conditions d\'utilisation du service',
       lastUpdated: '10 janvier 2025',
+      termsQuestionsTitle: 'Questions sur les termes?',
+      termsQuestionsText: 'Si vous avez des questions sur nos conditions de service, contactez-nous',
       sections: {
         acceptance: { title: 'Acceptation', content: 'En utilisant le service, vous acceptez ces conditions.' },
         usage: { title: 'Utilisation', content: 'Service gratuit pour tous les utilisateurs.' },

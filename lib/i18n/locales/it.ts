@@ -18,10 +18,14 @@ export const it: Translation = {
     green: 'Verde Natura',
     purple: 'Viola Creativo',
     orange: 'Arancione Energico',
-    pink: 'Rosa Elegante',
+    red: 'Red Theme', yellow: 'Yellow Theme', black: 'Black Theme', pink: 'Rosa Elegante',
     dark: 'Scuro Moderno'
   },
-  content: {
+  editor: {
+    editContent: 'Edit Content',
+    title: 'Title',
+    subtitle: 'Subtitle',
+    description: 'Description',
     name: 'Nome',
     title: 'Titolo',
     company: 'Azienda',
@@ -32,6 +36,14 @@ export const it: Translation = {
     bio: 'Biografia',
     uploadQR: 'Carica QR',
     features: 'Funzionalità'
+  ,
+    addFeature: 'Add Feature',
+    qrCode: 'QR Code',
+    dragUpload: 'Drag to upload',
+    uploadSupport: 'PNG, JPG, GIF up to 10MB',
+    uploading: 'Uploading...',
+    qrUploaded: 'QR uploaded',
+    clickRemove: 'Click to remove'
   },
   ui: {
     selectTheme: 'Seleziona Tema',
