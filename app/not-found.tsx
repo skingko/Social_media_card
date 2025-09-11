@@ -1,6 +1,20 @@
+'use client'
+
 import Link from 'next/link'
- 
+import { useState, useEffect } from 'react'
+import { useTranslation, LanguageCode, loadLanguagePreference, detectBrowserLanguage } from '../lib/i18n/index'
+
 export default function NotFound() {
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('zh-CN')
+  const t = useTranslation(currentLanguage)
+
+  useEffect(() => {
+    const savedLanguage = loadLanguagePreference()
+    const detectedLanguage = detectBrowserLanguage()
+    const language = savedLanguage || detectedLanguage
+    setCurrentLanguage(language)
+  }, [])
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center">
@@ -11,7 +25,7 @@ export default function NotFound() {
           href="/"
           className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
         >
-          返回首页
+          {t.seo?.common?.backToHome || '返回首页'}
         </Link>
       </div>
     </div>

@@ -20,13 +20,22 @@ export const es: Translation = {
     orange: 'Corazón Naranja',
     red: 'Rojo Pintor',
     yellow: 'Yamabuki',
-    black: 'Negro Geek'
+    black: 'Negro Geek',
+    pink: 'Rosa Elegante',
+    dark: 'Oscuro Moderno'
   },
   editor: {
     editContent: 'Editar Contenido',
     title: 'Título',
     subtitle: 'Subtítulo',
     description: 'Descripción',
+    name: 'Nombre',
+    company: 'Empresa',
+    phone: 'Teléfono',
+    email: 'Correo electrónico',
+    website: 'Sitio web',
+    wechat: 'WeChat',
+    bio: 'Biografía',
     features: 'Características (Arrastrar para Reordenar)',
     addFeature: '+ Agregar Característica',
     qrCode: 'Imagen Código QR',
@@ -45,6 +54,7 @@ export const es: Translation = {
     wechat: 'WeChat',
     followUs: 'Síguenos',
     author: 'Autor',
+    githubRepo: 'Repositorio GitHub',
     addAuthorWechat: 'Agregar WeChat del Autor',
     wechatPublic: 'Cuenta Pública de WeChat',
     scanToFollow: 'Escanear para Seguir',
@@ -86,6 +96,9 @@ export const es: Translation = {
     keywords: 'tarjeta de redes sociales,generador de tarjetas,tarjeta social,diseño de tarjetas,creador de tarjetas,creador de tarjetas en línea'
   },
   seo: {
+    common: {
+      backToHome: 'Volver al Inicio', lastUpdated: 'Última Actualización', getStarted: 'Comenzar', learnMore: 'Saber Más', readyToStart: '¿Listo para comenzar?', startCreating: 'Comenzar a Crear', quickStart: 'Inicio Rápido', tipsAndTricks: 'Tips y Trucos', bestPractices: 'Mejores Prácticas', commonFeatures: 'Funciones Comunes', stillHaveQuestions: '¿Más preguntas?', contactSupport: 'Contactar Soporte', followUs: 'Síguenos', openSource: 'Código Abierto', projectIntroduction: 'Introducción del Proyecto', ourMission: 'Nuestra Misión', features: 'Características', technologyStack: 'Stack Tecnológico', developmentTeam: 'Equipo de Desarrollo', contactUs: 'Contáctanos', websiteInfo: 'Información del Sitio', legalNotice: 'Aviso Legal', dataProcessingDetails: 'Detalles del Procesamiento', userRights: 'Tus Derechos', disclaimer: 'Descargo de Responsabilidad', legalJurisdiction: 'Jurisdicción Legal', termsQuestions: '¿Preguntas sobre Términos?', privacyQuestions: '¿Preguntas de Privacidad?', supportChannels: 'Canales de Soporte'
+    },
     navigation: {
       about: 'Acerca de',
       faq: 'Preguntas Frecuentes',
@@ -105,11 +118,21 @@ export const es: Translation = {
         technology: 'Construido con Next.js, React, TypeScript y Tailwind CSS.',
         team: 'Equipo de desarrolladores y diseñadores experimentados.',
         contact: 'Contáctanos para cualquier pregunta o sugerencia.'
+      },
+      featureList: {
+        multiTheme: { title: 'Múltiples Temas', description: 'Varios temas hermosos para diferentes escenarios' },
+        dragSort: { title: 'Arrastrar y Ordenar', description: 'Reorganizar libremente los módulos de funciones' },
+        realTimePreview: { title: 'Vista Previa en Tiempo Real', description: 'Lo que ves es lo que obtienes' },
+        multiLanguage: { title: 'Soporte Multiidioma', description: 'Soporte para más de 20 idiomas' },
+        highQuality: { title: 'Alta Calidad', description: 'Generación de imágenes de alta resolución con un clic' },
+        completelyFree: { title: 'Completamente Gratis', description: 'Todas las funciones gratuitas, no requiere registro' }
       }
     },
     faq: {
       title: 'Preguntas Frecuentes',
       description: 'Preguntas comunes sobre el Generador de Tarjetas',
+      moreQuestions: '¿Tienes más preguntas?',
+      contactSupport: 'Si no encuentras la respuesta que buscas, contacta con nuestro equipo de soporte',
       questions: {
         q1: { question: '¿Cómo usar el generador?', answer: 'Elige tema, completa información, arrastra módulos, previsualiza y genera.' },
         q2: { question: '¿Qué idiomas soporta?', answer: 'Más de 20 idiomas incluyendo español, inglés, chino, japonés, etc.' },
@@ -124,6 +147,8 @@ export const es: Translation = {
     guide: {
       title: 'Guía del Usuario',
       description: 'Aprende a usar todas las características',
+      simpleSteps: 'Solo 5 pasos simples para crear tarjetas profesionales:',
+      startCreatingNow: '¡Comienza a crear tu tarjeta profesional ahora!',
       steps: {
         step1: { title: 'Elegir Tema', content: 'Selecciona entre múltiples estilos hermosos.' },
         step2: { title: 'Completar Info', content: 'Ingresa tu información personal y de contacto.' },
@@ -136,6 +161,13 @@ export const es: Translation = {
       title: 'Política de Privacidad',
       description: 'Cómo protegemos tu privacidad',
       lastUpdated: '10 de enero de 2025',
+      privacyCommitment: 'Compromiso de Privacidad',
+      privacyCommitmentText: 'Nuestro servicio funciona completamente local en tu navegador y no recopila, almacena o transmite información personal.',
+      dataProcessingDetails: 'Detalles del Procesamiento de Datos',
+      yourRights: 'Tus Derechos',
+      contactRightText: 'Contáctanos en cualquier momento',
+      privacyQuestionsTitle: '¿Preguntas sobre privacidad?',
+      privacyQuestionsText: 'Si tienes preguntas sobre nuestra política de privacidad, contáctanos',
       sections: {
         overview: { title: 'Resumen', content: 'Respetamos tu privacidad y protegemos tus datos.' },
         dataCollection: { title: 'Recopilación', content: 'Procesamiento local, sin subida de datos personales.' },
@@ -149,6 +181,8 @@ export const es: Translation = {
       title: 'Términos de Servicio',
       description: 'Condiciones de uso del servicio',
       lastUpdated: '10 de enero de 2025',
+      termsQuestionsTitle: '¿Preguntas sobre términos?',
+      termsQuestionsText: 'Si tienes preguntas sobre nuestros términos de servicio, contáctanos',
       sections: {
         acceptance: { title: 'Aceptación', content: 'Al usar el servicio, aceptas estos términos.' },
         usage: { title: 'Uso', content: 'Servicio gratuito para todos los usuarios.' },

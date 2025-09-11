@@ -20,13 +20,22 @@ export const en: Translation = {
     orange: 'Orange Heart',
     red: 'Painter Red',
     yellow: 'Yamabuki',
-    black: 'Geek Black'
+    black: 'Geek Black',
+    pink: 'Elegant Pink',
+    dark: 'Modern Dark'
   },
   editor: {
     editContent: 'Edit Content',
     title: 'Title',
     subtitle: 'Subtitle',
     description: 'Description',
+    name: 'Name',
+    company: 'Company',
+    phone: 'Phone',
+    email: 'Email',
+    website: 'Website',
+    wechat: 'WeChat',
+    bio: 'Bio',
     features: 'Features (Drag to Reorder)',
     addFeature: '+ Add Feature',
     qrCode: 'QR Code Image',
@@ -45,6 +54,7 @@ export const en: Translation = {
     wechat: 'WeChat',
     followUs: 'Follow Us',
     author: 'Author',
+    githubRepo: 'GitHub Repository',
     addAuthorWechat: 'Add Author WeChat',
     wechatPublic: 'WeChat Public Account',
     scanToFollow: 'Scan to Follow',
@@ -86,6 +96,37 @@ export const en: Translation = {
     keywords: 'social media card,card generator,social card,card design,card maker,online card maker'
   },
   seo: {
+    common: {
+      backToHome: 'Back to Home',
+      lastUpdated: 'Last Updated',
+      getStarted: 'Get Started',
+      learnMore: 'Learn More',
+      readyToStart: 'Ready to start?',
+      startCreating: 'Start Creating Now',
+      quickStart: 'Quick Start',
+      tipsAndTricks: 'Tips and Tricks',
+      bestPractices: 'Best Practices',
+      commonFeatures: 'Common Features',
+      stillHaveQuestions: 'Still have questions?',
+      contactSupport: 'Contact Support',
+      followUs: 'Follow Us',
+      openSource: 'Open Source',
+      projectIntroduction: 'Project Introduction',
+      ourMission: 'Our Mission',
+      features: 'Features',
+      technologyStack: 'Technology Stack',
+      developmentTeam: 'Development Team',
+      contactUs: 'Contact Us',
+      websiteInfo: 'Website Information',
+      legalNotice: 'Legal Notice',
+      dataProcessingDetails: 'Data Processing Details',
+      userRights: 'Your Rights',
+      disclaimer: 'Disclaimer',
+      legalJurisdiction: 'Legal Jurisdiction',
+      termsQuestions: 'Terms Questions?',
+      privacyQuestions: 'Privacy Questions?',
+      supportChannels: 'Support Channels'
+    },
     navigation: {
       about: 'About Us',
       faq: 'FAQ',
@@ -105,11 +146,21 @@ export const en: Translation = {
         technology: 'We are built with the latest web technologies including Next.js, React, TypeScript, and Tailwind CSS to ensure the best user experience and performance.',
         team: 'Our team consists of experienced developers and designers, committed to continuously improving the product and providing better services to users.',
         contact: 'If you have any questions or suggestions, please feel free to contact us via WeChat, GitHub, or email. We value every user feedback.'
+      },
+      featureList: {
+        multiTheme: { title: 'Multiple Themes', description: 'Various beautiful themes for different scenarios' },
+        dragSort: { title: 'Drag & Sort', description: 'Freely adjust the display order of feature modules' },
+        realTimePreview: { title: 'Real-time Preview', description: 'What you see is what you get editing experience' },
+        multiLanguage: { title: 'Multi-language Support', description: 'Support for 20+ languages, serving global users' },
+        highQuality: { title: 'High-quality Output', description: 'One-click generation of high-resolution card images' },
+        completelyFree: { title: 'Completely Free', description: 'All features are free to use, no registration required' }
       }
     },
     faq: {
       title: 'Frequently Asked Questions',
       description: 'Common questions and detailed answers about Social Media Card Generator',
+      moreQuestions: 'Have Other Questions?',
+      contactSupport: 'If you haven\'t found the answer you\'re looking for, feel free to contact our technical support team directly',
       questions: {
         q1: {
           question: 'How to use the Social Media Card Generator?',
@@ -148,6 +199,8 @@ export const en: Translation = {
     guide: {
       title: 'User Guide',
       description: 'Detailed user guide to help you quickly master all features of Social Media Card Generator',
+      simpleSteps: 'Just 5 simple steps to create professional social media cards:',
+      startCreatingNow: 'Start creating your professional social media card now!',
       steps: {
         step1: {
           title: 'Choose Theme Style',
@@ -175,6 +228,13 @@ export const en: Translation = {
       title: 'Privacy Policy',
       description: 'How we protect your privacy and handle your data',
       lastUpdated: 'January 10, 2025',
+      privacyCommitment: 'Privacy Commitment',
+      privacyCommitmentText: 'Our service runs completely locally in your browser and does not collect, store, or transmit your personal information to our servers.',
+      dataProcessingDetails: 'Data Processing Details',
+      yourRights: 'Your Rights',
+      contactRightText: 'Contact us anytime for questions',
+      privacyQuestionsTitle: 'Have privacy questions?',
+      privacyQuestionsText: 'If you have any questions about our privacy policy, please contact us anytime',
       sections: {
         overview: {
           title: 'Overview',
@@ -206,6 +266,8 @@ export const en: Translation = {
       title: 'Terms of Service',
       description: 'Terms and conditions for using Social Media Card Generator',
       lastUpdated: 'January 10, 2025',
+      termsQuestionsTitle: 'Questions about terms?',
+      termsQuestionsText: 'If you have any questions about our terms of service, please contact us anytime',
       sections: {
         acceptance: {
           title: 'Terms Acceptance',

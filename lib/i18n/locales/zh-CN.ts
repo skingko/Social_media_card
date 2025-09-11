@@ -27,6 +27,13 @@ export const zhCN: Translation = {
     title: '标题',
     subtitle: '副标题',
     description: '描述内容',
+    name: '姓名',
+    company: '公司',
+    phone: '电话',
+    email: '邮箱',
+    website: '网站',
+    wechat: '微信',
+    bio: '个人简介',
     features: '功能特性（可拖拽排序）',
     addFeature: '+ 添加功能',
     qrCode: '二维码图片',
@@ -86,6 +93,37 @@ export const zhCN: Translation = {
     keywords: '社交媒体名片,名片生成器,社交名片,名片设计,名片制作,在线名片制作'
   },
   seo: {
+    common: {
+      backToHome: '返回首页',
+      lastUpdated: '最后更新',
+      getStarted: '开始使用',
+      learnMore: '了解更多',
+      readyToStart: '准备好开始了吗？',
+      startCreating: '立即开始制作',
+      quickStart: '快速开始',
+      tipsAndTricks: '提示和技巧',
+      bestPractices: '最佳实践',
+      commonFeatures: '常用功能',
+      stillHaveQuestions: '还有其他问题？',
+      contactSupport: '联系技术支持',
+      followUs: '关注我们',
+      openSource: '开源项目',
+      projectIntroduction: '项目介绍',
+      ourMission: '我们的使命',
+      features: '功能特色',
+      technologyStack: '技术架构',
+      developmentTeam: '开发团队',
+      contactUs: '联系我们',
+      websiteInfo: '网站信息',
+      legalNotice: '法律声明',
+      dataProcessingDetails: '数据处理详情',
+      userRights: '您的权利',
+      disclaimer: '免责声明',
+      legalJurisdiction: '法律适用',
+      termsQuestions: '条款问题？',
+      privacyQuestions: '有隐私问题？',
+      supportChannels: '支持渠道'
+    },
     navigation: {
       about: '关于我们',
       faq: '常见问题',
@@ -105,11 +143,21 @@ export const zhCN: Translation = {
         technology: '我们使用最新的Web技术构建，包括Next.js、React、TypeScript和Tailwind CSS，确保最佳的用户体验和性能。',
         team: '我们的团队由经验丰富的开发者和设计师组成，致力于持续改进产品，为用户提供更好的服务。',
         contact: '如有任何问题或建议，欢迎通过微信、GitHub或邮件联系我们。我们重视每一个用户的反馈。'
+      },
+      featureList: {
+        multiTheme: { title: '多主题风格', description: '提供多种精美主题，适合不同场景使用' },
+        dragSort: { title: '拖拽排序', description: '自由调整功能模块显示顺序' },
+        realTimePreview: { title: '实时预览', description: '所见即所得的编辑体验' },
+        multiLanguage: { title: '多语言支持', description: '支持20多种语言，服务全球用户' },
+        highQuality: { title: '高质量输出', description: '一键生成高分辨率名片图片' },
+        completelyFree: { title: '完全免费', description: '所有功能免费使用，无需注册' }
       }
     },
     faq: {
       title: '常见问题解答',
       description: '关于社交媒体名片生成器的常见问题和详细解答',
+      moreQuestions: '还有其他问题？',
+      contactSupport: '如果您没有找到想要的答案，欢迎直接联系我们的技术支持团队',
       questions: {
         q1: {
           question: '如何使用社交媒体名片生成器？',
@@ -148,6 +196,8 @@ export const zhCN: Translation = {
     guide: {
       title: '使用指南',
       description: '详细的使用指南，帮助您快速掌握社交媒体名片生成器的所有功能',
+      simpleSteps: '只需5个简单步骤，即可创建专业的社交媒体名片：',
+      startCreatingNow: '现在就开始创建您的专业社交媒体名片吧！',
       steps: {
         step1: {
           title: '选择主题风格',
@@ -175,6 +225,13 @@ export const zhCN: Translation = {
       title: '隐私政策',
       description: '我们如何保护您的隐私和处理您的数据',
       lastUpdated: '2025年1月10日',
+      privacyCommitment: '隐私保护承诺',
+      privacyCommitmentText: '我们的服务完全在您的浏览器本地运行，不会收集、存储或传输您的个人信息到我们的服务器。',
+      dataProcessingDetails: '数据处理详情',
+      yourRights: '您的权利',
+      contactRightText: '随时联系我们咨询问题',
+      privacyQuestionsTitle: '有隐私问题？',
+      privacyQuestionsText: '如果您对我们的隐私政策有任何疑问，请随时联系我们',
       sections: {
         overview: {
           title: '概述',
@@ -206,6 +263,8 @@ export const zhCN: Translation = {
       title: '使用条款',
       description: '使用社交媒体名片生成器的条款和条件',
       lastUpdated: '2025年1月10日',
+      termsQuestionsTitle: '条款问题？',
+      termsQuestionsText: '如果您对我们的使用条款有任何疑问，请随时联系我们',
       sections: {
         acceptance: {
           title: '条款接受',

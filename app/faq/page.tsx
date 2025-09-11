@@ -3,6 +3,7 @@
 import { useTranslation, LanguageCode, loadLanguagePreference, detectBrowserLanguage } from '../../lib/i18n/index'
 import { ModernLogo } from '../../components/ui/logo'
 import { Footer } from '../../components/ui/footer'
+import { SEOHead } from '../../components/ui/seo-head'
 import Link from 'next/link'
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -72,6 +73,13 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <SEOHead
+        title={`${t.seo?.faq?.title || '常见问题'} - 社交媒体生成器`}
+        description={t.seo?.faq?.description || '查看常见问题和解答'}
+        keywords={`${t.seo?.faq?.title || '常见问题'},FAQ,帮助,问题解答,社交媒体名片`}
+        canonicalUrl="https://www.sm-card.com/faq"
+        language={currentLanguage}
+      />
       {/* 导航栏 */}
       <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,7 +90,7 @@ export default function FAQPage() {
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span className="text-sm font-medium">返回首页</span>
+                <span className="text-sm font-medium">{t.seo?.common?.backToHome || '返回首页'}</span>
               </Link>
               <div className="h-6 w-px bg-gray-300" />
               <ModernLogo className="w-8 h-8" showDomain={false} size={32} />
@@ -134,9 +142,9 @@ export default function FAQPage() {
 
           {/* 底部联系信息 */}
           <div className="mt-12 bg-blue-50 rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">还有其他问题？</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t.seo?.faq?.moreQuestions || '还有其他问题？'}</h2>
             <p className="text-gray-700 mb-6">
-              如果您没有找到想要的答案，欢迎直接联系我们的技术支持团队
+              {t.seo?.faq?.contactSupport || '如果您没有找到想要的答案，欢迎直接联系我们的技术支持团队'}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a 

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation, LanguageCode, loadLanguagePreference, detectBrowserLanguage } from '../../lib/i18n/index'
 import { ModernLogo } from '../../components/ui/logo'
 import { Footer } from '../../components/ui/footer'
+import { SEOHead } from '../../components/ui/seo-head'
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle } from 'lucide-react'
 
@@ -52,9 +53,17 @@ export default function GuidePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* 导航栏 */}
-      <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+    <>
+      <SEOHead
+        title={`${t.seo?.guide?.title || '使用指南'} - 社交媒体生成器`}
+        description={t.seo?.guide?.description || '学习如何使用社交媒体名片生成器'}
+        keywords={`${t.seo?.guide?.title || '使用指南'},教程,指南,帮助,社交媒体名片制作`}
+        canonicalUrl="https://www.sm-card.com/guide"
+        language={currentLanguage}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        {/* 导航栏 */}
+        <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-4">
@@ -63,7 +72,7 @@ export default function GuidePage() {
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span className="text-sm font-medium">返回首页</span>
+                <span className="text-sm font-medium">{t.seo?.common?.backToHome || '返回首页'}</span>
               </Link>
               <div className="h-6 w-px bg-gray-300" />
               <ModernLogo className="w-8 h-8" showDomain={false} size={32} />
@@ -89,10 +98,10 @@ export default function GuidePage() {
           <div className="mb-12 bg-blue-50 rounded-xl p-8">
             <div className="flex items-center gap-3 mb-4">
               <CheckCircle className="w-6 h-6 text-blue-500" />
-              <h2 className="text-2xl font-semibold text-gray-900">快速开始</h2>
+              <h2 className="text-2xl font-semibold text-gray-900">{t.seo?.common?.quickStart || '快速开始'}</h2>
             </div>
             <p className="text-gray-700 mb-4">
-              只需5个简单步骤，即可创建专业的社交媒体名片：
+              {t.seo?.guide?.simpleSteps || '只需5个简单步骤，即可创建专业的社交媒体名片：'}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               {steps.map((step, index) => (
@@ -134,7 +143,7 @@ export default function GuidePage() {
 
           {/* 提示和技巧 */}
           <div className="mt-12 bg-yellow-50 rounded-xl p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">💡 提示和技巧</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">💡 {t.seo?.common?.tipsAndTricks || '提示和技巧'}</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">最佳实践</h3>
@@ -175,9 +184,9 @@ export default function GuidePage() {
 
           {/* 开始使用 */}
           <div className="mt-12 text-center">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">准备好开始了吗？</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t.seo?.common?.readyToStart || '准备好开始了吗？'}</h2>
             <p className="text-gray-600 mb-6">
-              现在就开始创建您的专业社交媒体名片吧！
+              {t.seo?.guide?.startCreatingNow || '现在就开始创建您的专业社交媒体名片吧！'}
             </p>
             <Link 
               href="/"
@@ -189,7 +198,8 @@ export default function GuidePage() {
         </div>
       </main>
 
-      <Footer language={currentLanguage} />
-    </div>
+        <Footer language={currentLanguage} />
+      </div>
+    </>
   )
 }

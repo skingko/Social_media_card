@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation, LanguageCode, loadLanguagePreference, detectBrowserLanguage } from '../../lib/i18n/index'
 import { ModernLogo } from '../../components/ui/logo'
 import { Footer } from '../../components/ui/footer'
+import { SEOHead } from '../../components/ui/seo-head'
 import Link from 'next/link'
 import { ArrowLeft, MessageCircle, Github, Mail, Clock, MapPin, Phone } from 'lucide-react'
 
@@ -51,9 +52,17 @@ export default function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* 导航栏 */}
-      <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+    <>
+      <SEOHead
+        title={`${t.seo?.contact?.title || '联系我们'} - 社交媒体生成器`}
+        description={t.seo?.contact?.description || '联系我们获取帮助和支持'}
+        keywords={`${t.seo?.contact?.title || '联系我们'},客服,支持,帮助,技术支持`}
+        canonicalUrl="https://www.sm-card.com/contact"
+        language={currentLanguage}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        {/* 导航栏 */}
+        <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-4">
@@ -62,7 +71,7 @@ export default function ContactPage() {
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span className="text-sm font-medium">返回首页</span>
+                <span className="text-sm font-medium">{t.seo?.common?.backToHome || '返回首页'}</span>
               </Link>
               <div className="h-6 w-px bg-gray-300" />
               <ModernLogo className="w-8 h-8" showDomain={false} size={32} />
@@ -254,7 +263,8 @@ export default function ContactPage() {
         </div>
       </main>
 
-      <Footer language={currentLanguage} />
-    </div>
+        <Footer language={currentLanguage} />
+      </div>
+    </>
   )
 }

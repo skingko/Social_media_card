@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation, LanguageCode, loadLanguagePreference, detectBrowserLanguage } from '../../lib/i18n/index'
 import { ModernLogo } from '../../components/ui/logo'
 import { Footer } from '../../components/ui/footer'
+import { SEOHead } from '../../components/ui/seo-head'
 import Link from 'next/link'
 import { ArrowLeft, FileText, Check, AlertTriangle, Settings, Mail } from 'lucide-react'
 
@@ -58,9 +59,17 @@ export default function TermsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* 导航栏 */}
-      <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+    <>
+      <SEOHead
+        title={`${t.seo?.terms?.title || '使用条款'} - 社交媒体生成器`}
+        description={t.seo?.terms?.description || '了解我们的使用条款和服务协议'}
+        keywords={`${t.seo?.terms?.title || '使用条款'},服务协议,用户协议,法律条款`}
+        canonicalUrl="https://www.sm-card.com/terms"
+        language={currentLanguage}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        {/* 导航栏 */}
+        <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-4">
@@ -69,7 +78,7 @@ export default function TermsPage() {
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span className="text-sm font-medium">返回首页</span>
+                <span className="text-sm font-medium">{t.seo?.common?.backToHome || '返回首页'}</span>
               </Link>
               <div className="h-6 w-px bg-gray-300" />
               <ModernLogo className="w-8 h-8" showDomain={false} size={32} />
@@ -217,9 +226,9 @@ export default function TermsPage() {
 
           {/* 联系信息 */}
           <div className="mt-12 text-center">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">条款问题？</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t.seo?.terms?.termsQuestionsTitle || '条款问题？'}</h2>
             <p className="text-gray-600 mb-6">
-              如果您对我们的使用条款有任何疑问，请随时联系我们
+              {t.seo?.terms?.termsQuestionsText || '如果您对我们的使用条款有任何疑问，请随时联系我们'}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a 
@@ -238,7 +247,8 @@ export default function TermsPage() {
         </div>
       </main>
 
-      <Footer language={currentLanguage} />
-    </div>
+        <Footer language={currentLanguage} />
+      </div>
+    </>
   )
 }

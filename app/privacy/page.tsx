@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation, LanguageCode, loadLanguagePreference, detectBrowserLanguage } from '../../lib/i18n/index'
 import { ModernLogo } from '../../components/ui/logo'
 import { Footer } from '../../components/ui/footer'
+import { SEOHead } from '../../components/ui/seo-head'
 import Link from 'next/link'
 import { ArrowLeft, Shield, Lock, Eye, Cookie, Mail } from 'lucide-react'
 
@@ -58,9 +59,17 @@ export default function PrivacyPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* 导航栏 */}
-      <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+    <>
+      <SEOHead
+        title={`${t.seo?.privacy?.title || '隐私政策'} - 社交媒体生成器`}
+        description={t.seo?.privacy?.description || '了解我们的隐私政策和数据处理方式'}
+        keywords={`${t.seo?.privacy?.title || '隐私政策'},数据保护,隐私保护,数据安全`}
+        canonicalUrl="https://www.sm-card.com/privacy"
+        language={currentLanguage}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        {/* 导航栏 */}
+        <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-4">
@@ -69,7 +78,7 @@ export default function PrivacyPage() {
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span className="text-sm font-medium">返回首页</span>
+                <span className="text-sm font-medium">{t.seo?.common?.backToHome || '返回首页'}</span>
               </Link>
               <div className="h-6 w-px bg-gray-300" />
               <ModernLogo className="w-8 h-8" showDomain={false} size={32} />
@@ -106,9 +115,9 @@ export default function PrivacyPage() {
                 <span className="text-white text-sm font-bold">✓</span>
               </div>
               <div>
-                <h3 className="font-semibold text-green-900 mb-2">隐私保护承诺</h3>
+                <h3 className="font-semibold text-green-900 mb-2">{t.seo?.privacy?.privacyCommitment || '隐私保护承诺'}</h3>
                 <p className="text-green-800">
-                  我们的服务完全在您的浏览器本地运行，不会收集、存储或传输您的个人信息到我们的服务器。
+                  {t.seo?.privacy?.privacyCommitmentText || '我们的服务完全在您的浏览器本地运行，不会收集、存储或传输您的个人信息到我们的服务器。'}
                   您的数据安全是我们的首要关注。
                 </p>
               </div>
@@ -134,7 +143,7 @@ export default function PrivacyPage() {
 
           {/* 数据处理详情 */}
           <div className="mt-12 bg-gray-50 rounded-xl p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">数据处理详情</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">{t.seo?.privacy?.dataProcessingDetails || '数据处理详情'}</h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
@@ -165,7 +174,7 @@ export default function PrivacyPage() {
 
           {/* 用户权利 */}
           <div className="mt-12 bg-blue-50 rounded-xl p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">您的权利</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">{t.seo?.privacy?.yourRights || '您的权利'}</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -186,16 +195,16 @@ export default function PrivacyPage() {
                   <Mail className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">联系权</h3>
-                <p className="text-gray-700 text-sm">随时联系我们咨询问题</p>
+                <p className="text-gray-700 text-sm">{t.seo?.privacy?.contactRightText || '随时联系我们咨询问题'}</p>
               </div>
             </div>
           </div>
 
           {/* 联系信息 */}
           <div className="mt-12 text-center">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">有隐私问题？</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t.seo?.privacy?.privacyQuestionsTitle || '有隐私问题？'}</h2>
             <p className="text-gray-600 mb-6">
-              如果您对我们的隐私政策有任何疑问，请随时联系我们
+              {t.seo?.privacy?.privacyQuestionsText || '如果您对我们的隐私政策有任何疑问，请随时联系我们'}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a 
@@ -214,7 +223,8 @@ export default function PrivacyPage() {
         </div>
       </main>
 
-      <Footer language={currentLanguage} />
-    </div>
+        <Footer language={currentLanguage} />
+      </div>
+    </>
   )
 }

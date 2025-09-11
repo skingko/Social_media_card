@@ -20,12 +20,21 @@ export interface Translation {
     red: string
     yellow: string
     black: string
+    pink: string
+    dark: string
   }
   editor: {
     editContent: string
     title: string
     subtitle: string
     description: string
+    name: string
+    company: string
+    phone: string
+    email: string
+    website: string
+    wechat: string
+    bio: string
     features: string
     addFeature: string
     qrCode: string
@@ -44,6 +53,7 @@ export interface Translation {
     wechat: string
     followUs: string
     author: string
+    githubRepo: string
     addAuthorWechat: string
     wechatPublic: string
     scanToFollow: string
@@ -85,6 +95,37 @@ export interface Translation {
     keywords: string
   }
   seo: {
+    common: {
+      backToHome: string
+      lastUpdated: string
+      getStarted: string
+      learnMore: string
+      readyToStart: string
+      startCreating: string
+      quickStart: string
+      tipsAndTricks: string
+      bestPractices: string
+      commonFeatures: string
+      stillHaveQuestions: string
+      contactSupport: string
+      followUs: string
+      openSource: string
+      projectIntroduction: string
+      ourMission: string
+      features: string
+      technologyStack: string
+      developmentTeam: string
+      contactUs: string
+      websiteInfo: string
+      legalNotice: string
+      dataProcessingDetails: string
+      userRights: string
+      disclaimer: string
+      legalJurisdiction: string
+      termsQuestions: string
+      privacyQuestions: string
+      supportChannels: string
+    }
     navigation: {
       about: string
       faq: string
@@ -105,10 +146,20 @@ export interface Translation {
         team: string
         contact: string
       }
+      featureList: {
+        multiTheme: { title: string; description: string }
+        dragSort: { title: string; description: string }
+        realTimePreview: { title: string; description: string }
+        multiLanguage: { title: string; description: string }
+        highQuality: { title: string; description: string }
+        completelyFree: { title: string; description: string }
+      }
     }
     faq: {
       title: string
       description: string
+      moreQuestions: string
+      contactSupport: string
       questions: {
         q1: {
           question: string
@@ -147,6 +198,8 @@ export interface Translation {
     guide: {
       title: string
       description: string
+      simpleSteps: string
+      startCreatingNow: string
       steps: {
         step1: {
           title: string
@@ -174,6 +227,13 @@ export interface Translation {
       title: string
       description: string
       lastUpdated: string
+      privacyCommitment: string
+      privacyCommitmentText: string
+      dataProcessingDetails: string
+      yourRights: string
+      contactRightText: string
+      privacyQuestionsTitle: string
+      privacyQuestionsText: string
       sections: {
         overview: {
           title: string
@@ -205,6 +265,8 @@ export interface Translation {
       title: string
       description: string
       lastUpdated: string
+      termsQuestionsTitle: string
+      termsQuestionsText: string
       sections: {
         acceptance: {
           title: string

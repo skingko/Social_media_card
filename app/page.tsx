@@ -10,6 +10,7 @@ import { LanguageSwitcher } from '../components/ui/language-switcher'
 import { Footer } from '../components/ui/footer'
 import { ShareButton } from '../components/ui/share'
 import { useToast, ToastContainer } from '../components/ui/toast'
+import { SEOHead } from '../components/ui/seo-head'
 import { 
   useTranslation, 
   LanguageCode, 

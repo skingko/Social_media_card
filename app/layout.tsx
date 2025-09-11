@@ -6,9 +6,9 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI社交媒体名片生成器 - 专业名片设计工具',
-  description: '免费的社交媒体名片生成器，支持20+多语言、多种主题风格、拖拽排序、实时预览，一键生成高质量社交媒体名片',
-  keywords: '社交媒体名片,名片生成器,社交名片,名片设计,AI名片,在线名片制作,多语言名片生成器',
+  title: '社交媒体生成器 - 专业名片设计工具 | Social Media Generator',
+  description: '免费的社交媒体名片生成器，支持20+多语言、多种主题风格、拖拽排序、实时预览，一键生成高质量社交媒体名片 | Free social media card generator with 20+ languages support',
+  keywords: '社交媒体名片,名片生成器,社交名片,名片设计,在线名片制作,多语言名片生成器,social media card,card generator,business card maker',
   authors: [{ name: 'skingko' }],
   creator: 'skingko',
   publisher: 'skingko',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://social-card.skingko.com'),
+  metadataBase: new URL('https://www.sm-card.com'),
   alternates: {
     canonical: '/',
     languages: {
@@ -48,25 +48,25 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'AI社交媒体名片生成器 - 专业名片设计工具',
-    description: '免费的社交媒体名片生成器，支持20+多语言、多种主题风格、拖拽排序、实时预览，一键生成高质量社交媒体名片',
+    title: '社交媒体生成器 - 专业名片设计工具 | Social Media Generator',
+    description: '免费的社交媒体名片生成器，支持20+多语言、多种主题风格、拖拽排序、实时预览，一键生成高质量社交媒体名片 | Free social media card generator',
     type: 'website',
     locale: 'zh_CN',
-    url: 'https://social-card.skingko.com',
-    siteName: 'AI社交媒体名片生成器',
+    url: 'https://www.sm-card.com',
+    siteName: '社交媒体生成器 | Social Media Generator',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'AI社交媒体名片生成器',
+        alt: '社交媒体生成器 | Social Media Generator',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI社交媒体名片生成器 - 专业名片设计工具',
-    description: '免费的社交媒体名片生成器，支持20+多语言、多种主题风格、拖拽排序、实时预览，一键生成高质量社交媒体名片',
+    title: '社交媒体生成器 - 专业名片设计工具 | Social Media Generator',
+    description: '免费的社交媒体名片生成器，支持20+多语言、多种主题风格、拖拽排序、实时预览，一键生成高质量社交媒体名片 | Free social media card generator',
     creator: '@skingko',
     images: ['/og-image.png'],
   },

@@ -5,6 +5,15 @@ import { en } from './locales/en'
 import { ja } from './locales/ja'
 import { ko } from './locales/ko'
 import { es } from './locales/es'
+import { fr } from './locales/fr'
+import { de } from './locales/de'
+import { it } from './locales/it'
+import { pt } from './locales/pt'
+import { ru } from './locales/ru'
+import { ar } from './locales/ar'
+import { hi } from './locales/hi'
+import { th } from './locales/th'
+import { vi } from './locales/vi'
 
 // 翻译文本映射
 const translations: Record<LanguageCode, Translation> = {
@@ -14,15 +23,15 @@ const translations: Record<LanguageCode, Translation> = {
   'ja': ja,
   'ko': ko,
   'es': es,
-  'fr': en, // 暂时使用英文，后续可以添加法语
-  'de': en, // 暂时使用英文，后续可以添加德语
-  'it': en, // 暂时使用英文，后续可以添加意大利语
-  'pt': en, // 暂时使用英文，后续可以添加葡萄牙语
-  'ru': en, // 暂时使用英文，后续可以添加俄语
-  'ar': en, // 暂时使用英文，后续可以添加阿拉伯语
-  'hi': en, // 暂时使用英文，后续可以添加印地语
-  'th': en, // 暂时使用英文，后续可以添加泰语
-  'vi': en, // 暂时使用英文，后续可以添加越南语
+  'fr': fr,
+  'de': de,
+  'it': it,
+  'pt': pt,
+  'ru': ru,
+  'ar': ar,
+  'hi': hi,
+  'th': th,
+  'vi': vi,
 }
 
 // 根据浏览器语言检测默认语言
