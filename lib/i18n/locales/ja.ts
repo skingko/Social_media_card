@@ -20,7 +20,9 @@ export const ja: Translation = {
     orange: 'オレンジハート',
     red: 'ペインターレッド',
     yellow: '山吹色',
-    black: 'ギークブラック'
+    black: 'ギークブラック',
+    pink: 'エレガントピンク',
+    dark: 'モダンダーク'
   },
   editor: {
     editContent: 'コンテンツ編集',
@@ -52,6 +54,7 @@ export const ja: Translation = {
     wechat: 'WeChat',
     followUs: 'フォローする',
     author: '作者',
+    githubRepo: 'GitHubリポジトリ',
     addAuthorWechat: '作者WeChatを追加',
     wechatPublic: 'WeChat公式アカウント',
     scanToFollow: 'スキャンしてフォロー',
@@ -59,8 +62,8 @@ export const ja: Translation = {
     clickToEnlarge: 'QRコードをクリックして拡大',
     hoverToEnlarge: 'QRコードにマウスを合わせて拡大',
     websiteInfo: 'ウェブサイト情報',
-    domain: 'ドメイン',
-    websiteDescription: 'プロフェッショナルソーシャルメディアカード生成器'
+    domain: 'www.sm-card.com',
+    websiteDescription: 'ソーシャルメディアカード生成器'
   },
   ui: {
     selectTheme: 'テーマスタイルを選択',

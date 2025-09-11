@@ -21,7 +21,9 @@ export const ko: Translation = {
     red: '페인터 레드',
     yellow: '야마부키',
     black: '긱 블랙'
-  },
+  ,
+    pink: '우아한 핑크',
+    dark: '모던 다크'},
   editor: {
     editContent: '콘텐츠 편집',
     title: '제목',
@@ -52,6 +54,7 @@ export const ko: Translation = {
     wechat: 'WeChat',
     followUs: '팔로우',
     author: '작성자',
+    githubRepo: 'GitHub 저장소',
     addAuthorWechat: '작성자 WeChat 추가',
     wechatPublic: 'WeChat 공식 계정',
     scanToFollow: '스캔하여 팔로우',
