@@ -15,7 +15,8 @@ import {
   LanguageCode, 
   loadLanguagePreference, 
   saveLanguagePreference,
-  detectBrowserLanguage
+  detectBrowserLanguage,
+  supportedLanguages
 } from '../lib/i18n/index'
 
 // 使用阿里云OSS地址作为默认二维码，避免静态资源路径问题
@@ -584,9 +585,46 @@ export default function Home() {
 
   const theme = themes[currentTheme]
 
+  // 结构化数据
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": t.meta.title,
+    "description": t.meta.description,
+    "url": "https://www.sm-card.com",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "多主题风格",
+      "拖拽排序",
+      "实时预览", 
+      "多语言支持",
+      "高质量输出",
+      "完全免费"
+    ],
+    "author": {
+      "@type": "Person",
+      "name": "skingko"
+    },
+    "inLanguage": supportedLanguages.map(lang => lang.code),
+    "sameAs": [
+      "https://github.com/skingko/Social_media_card"
+    ]
+  }
+
   return (
     <>
       <DynamicHead language={currentLanguage} />
+      {/* 结构化数据 */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="min-h-screen bg-gray-100">
         {/* 顶部导航栏 */}
         <div className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b z-50 shadow-sm">

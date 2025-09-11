@@ -109,6 +109,30 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
           </div>
         </div>
 
+        {/* SEO页面链接 */}
+        <div className="mt-8 pt-8 border-t border-gray-200">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-center">
+            <a href="/about" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+              {t.seo?.navigation?.about || '关于我们'}
+            </a>
+            <a href="/faq" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+              {t.seo?.navigation?.faq || '常见问题'}
+            </a>
+            <a href="/guide" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+              {t.seo?.navigation?.guide || '使用指南'}
+            </a>
+            <a href="/privacy" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+              {t.seo?.navigation?.privacy || '隐私政策'}
+            </a>
+            <a href="/terms" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+              {t.seo?.navigation?.terms || '使用条款'}
+            </a>
+            <a href="/contact" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+              {t.seo?.navigation?.contact || '联系我们'}
+            </a>
+          </div>
+        </div>
+
         {/* 版权信息 */}
         <div className="mt-8 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
