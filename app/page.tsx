@@ -154,11 +154,11 @@ export default function Home() {
   const themes: Record<ThemeKey, ThemeConfig> = {
     blue: {
       name: t.themes.blue,
-      primary: 'bg-[#28ca71]',
+      primary: 'bg-[#3b82f6]',
       secondary: 'bg-blue-50',
-      accent: 'bg-[#28ca71]',
-      text: 'text-[#28ca71]',
-      button: 'bg-[#28ca71] hover:bg-[#20b864]'
+      accent: 'bg-[#3b82f6]',
+      text: 'text-[#3b82f6]',
+      button: 'bg-[#3b82f6] hover:bg-[#2563eb]'
     },
     green: {
       name: t.themes.green,
