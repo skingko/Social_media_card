@@ -244,6 +244,14 @@ export default function Home() {
     }
     
     setIsGenerating(true)
+    
+    // 检测浏览器类型和版本以优化配置
+    const userAgent = navigator.userAgent
+    const isFirefox = userAgent.includes('Firefox')
+    const isSafari = userAgent.includes('Safari') && !userAgent.includes('Chrome')
+    const isOldChrome = userAgent.includes('Chrome') && parseInt(userAgent.match(/Chrome\/(\d+)/)?.[1] || '0') < 80
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)
+    
     try {
       // 查找卡片元素（不包含外层容器）
       const cardElement = document.querySelector('.poster-card') as HTMLElement
@@ -318,62 +326,107 @@ export default function Home() {
         cardElement.querySelectorAll('img').forEach((el) => {
           try { (el as HTMLImageElement).style.display = 'inline-block' } catch {}
         })
-        const canvas = await html2canvas(cardElement, {
+        // 根据浏览器调整配置
+        const canvasOptions: any = {
           backgroundColor: null,
-          scale: 2,
+          scale: isMobile ? 1 : (window.devicePixelRatio > 1 ? 2 : 1.5),
           useCORS: true,
           logging: false,
           width: layoutMode === 'vertical' ? 384 : 672,
-          allowTaint: true,
-          foreignObjectRendering: false,
-          onclone: (doc) => {
+          height: layoutMode === 'vertical' ? 640 : 480,
+          allowTaint: isSafari || isOldChrome ? true : false,
+          foreignObjectRendering: isFirefox ? false : true,
+          imageTimeout: isMobile ? 20000 : 15000,
+          removeContainer: true,
+          onclone: (doc: Document) => {
             try {
-              // 确保克隆文档中的二维码具备CORS属性
-              doc.querySelectorAll('img[alt="二维码"]').forEach((el) => {
-                try { 
-                  const img = el as HTMLImageElement
-                  img.crossOrigin = 'anonymous'
-                  img.style.display = 'block'
-                  img.style.width = 'auto'
-                  img.style.height = 'auto'
-                } catch {}
-              })
-              
-              // 修复按钮和标题的样式
-              doc.querySelectorAll('.capture-cta').forEach((el) => {
-                const node = el as HTMLElement
-                node.style.display = 'flex'
-                node.style.alignItems = 'center'
-                node.style.justifyContent = 'center'
-                node.style.textAlign = 'center'
-                node.style.lineHeight = '1.2'
-                node.style.fontWeight = '500'
-              })
-              
-              doc.querySelectorAll('.capture-title').forEach((el) => {
-                const node = el as HTMLElement
-                node.style.display = 'block'
-                node.style.textAlign = 'center'
-                node.style.lineHeight = '1.2'
-                node.style.fontWeight = 'bold'
-                node.style.margin = '0'
-                node.style.padding = '0'
-              })
-              
-              // 确保所有文本元素正确对齐
-              doc.querySelectorAll('h1, h2, h3, p, div').forEach((el) => {
-                const node = el as HTMLElement
-                if (node.classList.contains('capture-title') || node.classList.contains('capture-cta')) {
-                  return // 已经处理过
+              // 添加关键样式到克隆文档
+              const styleElement = doc.createElement('style')
+              styleElement.textContent = `
+                * { 
+                  box-sizing: border-box !important; 
+                  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
                 }
-                node.style.lineHeight = '1.4'
+                img { 
+                  display: block !important; 
+                  max-width: 100% !important; 
+                  height: auto !important;
+                  object-fit: contain !important;
+                }
+                .capture-cta {
+                  display: flex !important;
+                  align-items: center !important;
+                  justify-content: center !important;
+                  text-align: center !important;
+                  line-height: 1.2 !important;
+                  font-weight: 500 !important;
+                  white-space: nowrap !important;
+                }
+                .capture-title {
+                  display: block !important;
+                  text-align: center !important;
+                  line-height: 1.2 !important;
+                  font-weight: bold !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  white-space: nowrap !important;
+                }
+                div, p, span {
+                  line-height: 1.4 !important;
+                }
+              `
+              doc.head.appendChild(styleElement)
+              
+              // 处理二维码图片 - 支持多语言alt属性
+              const qrSelectors = ['img[alt="二维码"]', 'img[alt="QR Code"]', 'img[alt="QR码"]', 'img[src*="qr"]', 'img[src*="QR"]']
+              qrSelectors.forEach(selector => {
+                doc.querySelectorAll(selector).forEach((el) => {
+                  try { 
+                    const img = el as HTMLImageElement
+                    img.crossOrigin = 'anonymous'
+                    img.style.display = 'block'
+                    img.style.width = 'auto'
+                    img.style.height = 'auto'
+                    img.style.maxWidth = '100%'
+                    img.style.objectFit = 'contain'
+                    
+                    // 确保图片加载完成
+                    if (!img.complete && img.src) {
+                      img.onload = () => console.log('Image loaded successfully')
+                      img.onerror = () => console.warn('Image failed to load:', img.src)
+                    }
+                  } catch (e) {
+                    console.warn('Image processing error:', e)
+                  }
+                })
+              })
+              
+              // 等待所有图片加载完成
+              const images = Array.from(doc.querySelectorAll('img'))
+              const imagePromises = images.map(img => {
+                return new Promise((resolve) => {
+                  if (img.complete) {
+                    resolve(true)
+                  } else {
+                    img.onload = () => resolve(true)
+                    img.onerror = () => resolve(false)
+                    // 超时保护
+                    setTimeout(() => resolve(false), 5000)
+                  }
+                })
+              })
+              
+              Promise.all(imagePromises).then(() => {
+                console.log('All images processed')
               })
               
             } catch (error) {
-              console.error('Clone processing error:', error)
+              console.warn('Clone processing error:', error)
             }
           }
-        })
+        }
+        
+        const canvas = await html2canvas(cardElement, canvasOptions)
         
         // 恢复原始class和样式
         cardElement.className = originalClassName
@@ -417,7 +470,29 @@ export default function Home() {
       }
     } catch (error) {
       console.error('生成图片失败:', error)
-      showError(t.ui.generateImageFailed || '生成图片失败，请重试')
+      
+      // 根据错误类型提供更具体的提示
+      let errorMessage = t.ui.generateImageFailed || '生成图片失败，请重试'
+      
+      if (error instanceof Error) {
+        const errorText = error.message.toLowerCase()
+        if (errorText.includes('cors') || errorText.includes('cross-origin')) {
+          errorMessage = '图片加载失败，请检查网络连接或尝试重新上传二维码'
+        } else if (errorText.includes('timeout')) {
+          errorMessage = '生成超时，请稍后重试或尝试简化内容'
+        } else if (errorText.includes('canvas') || errorText.includes('render')) {
+          errorMessage = `渲染失败，建议${isMobile ? '在电脑端' : '更换浏览器'}重试`
+        }
+      }
+      
+      showError(errorMessage)
+      
+      // 如果是特定浏览器问题，提供降级建议
+      if (isOldChrome || isSafari) {
+        setTimeout(() => {
+          showInfo('提示：如果持续失败，建议使用Chrome或Firefox最新版本')
+        }, 2000)
+      }
     } finally {
       setIsGenerating(false)
     }
