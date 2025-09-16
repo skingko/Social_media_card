@@ -254,7 +254,18 @@ export default function Home() {
     
     try {
       // 查找卡片元素（不包含外层容器）
-      const cardElement = document.querySelector('.poster-card') as HTMLElement
+      let cardElement = document.querySelector('.poster-card') as HTMLElement
+      
+      // 如果找不到，尝试通过 ref 获取
+      if (!cardElement && cardRef.current) {
+        cardElement = cardRef.current
+      }
+      
+      // 如果还是找不到，尝试通过 ID 获取
+      if (!cardElement) {
+        cardElement = document.getElementById('poster-content')?.querySelector('.poster-card') as HTMLElement
+      }
+      
       if (cardElement) {
         // 为远程二维码添加crossOrigin属性以支持CORS（本地上传的二维码不需要）
         const qrImages = cardElement.querySelectorAll('img[alt="二维码"]') as NodeListOf<HTMLImageElement>
@@ -466,6 +477,11 @@ export default function Home() {
         link.click()
         document.body.removeChild(link)
       } else {
+        console.error('Card element not found. Available elements:', {
+          posterCard: document.querySelector('.poster-card'),
+          cardRef: cardRef.current,
+          posterContent: document.getElementById('poster-content')
+        })
         showError(t.ui.cardNotFound || '未找到卡片元素，请稍后重试')
       }
     } catch (error) {
