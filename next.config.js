@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 移除 output: 'export' 以支持动态功能
+  // 支持动态功能，使用 .next 目录部署
   trailingSlash: true,
   images: {
     unoptimized: true

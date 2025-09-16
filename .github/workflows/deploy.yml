@@ -38,19 +38,12 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Install Wrangler
-        run: npm install -g wrangler
-
-      - name: Create Cloudflare Pages project (if not exists)
-        run: |
-          wrangler pages project create social-media-card --production-branch=main || echo "Project may already exist, continuing..."
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        
-      - name: Deploy to Cloudflare Pages with Wrangler
-        run: |
-          wrangler pages deploy out --project-name=social-media-card
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: social-media-card
+          directory: .next
+          # Optional: Use wrangler.toml configuration
+          wranglerVersion: '3'
